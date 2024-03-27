@@ -18,18 +18,18 @@ import Command from '@oclif/command';
 import { log, error } from 'console';
 
 import { configV3, configV4 } from '../fixtures/config';
-import { NETWORK_CONSTANT } from '../../../src/constants';
+import { DEFAULT_LISK_CONFIG_PATH, NETWORK_CONSTANT } from '../../../src/constants';
 import {
 	getNetworkByNetworkID,
 	getLogLevel,
 	migrateUserConfig,
 	validateConfig,
 	writeConfig,
-	resolveConfigPathByNetworkID,
 	createBackup,
 	getConfig,
+	resolveConfigDefaultPath,
 } from '../../../src/utils/config';
-import { ApplicationConfigV3, LoggerConfig } from '../../../src/types';
+import { ApplicationConfigV4, LoggerConfig } from '../../../src/types';
 
 const migratedConfigFilePath = join(__dirname, 'test/config');
 const expectedBackupPath = join(__dirname, '../../..', 'backup');
@@ -83,7 +83,7 @@ describe('Migrate user configuration', () => {
 	it('should migrate user configuration', async () => {
 		const snapshotHeight = 10815;
 		const config = ((await migrateUserConfig(
-			(configV3 as unknown) as ApplicationConfigV3,
+			(configV3 as unknown) as ApplicationConfigV4,
 			(configV4 as unknown) as ApplicationConfig,
 			snapshotHeight as number,
 		)) as unknown) as ApplicationConfig;
@@ -120,37 +120,26 @@ describe('Test networkIdentifier method', () => {
 	});
 });
 
-describe('Test resolveConfigPathByNetworkID method', () => {
-	it('should resolve config filePath when called by valid networkID', async () => {
-		const expectedConfigPath = resolve(`${__dirname}../../../../config/testnet/config.json`);
-		const networkID = '15f0dacc1060e91818224a94286b13aa04279c640bd5d6f193182031d133df7c';
-		const configPath = await resolveConfigPathByNetworkID(networkID);
+describe('Test resolveConfigDefaultPath method', () => {
+	it('should resolve config filePath when called', async () => {
+		const expectedConfigPath = resolve(DEFAULT_LISK_CONFIG_PATH);
+		const configPath = await resolveConfigDefaultPath();
 		expect(configPath).toBe(expectedConfigPath);
-	});
-
-	it('should throw error when called by invalid networkID', async () => {
-		await expect(resolveConfigPathByNetworkID('invalid')).rejects.toThrow();
 	});
 });
 
 describe('Test createBackup method', () => {
 	it('should create backup', async () => {
-		await createBackup((configV3 as unknown) as ApplicationConfigV3);
+		await createBackup((configV3 as unknown) as ApplicationConfigV4);
 		expect(fs.existsSync(expectedBackupPath)).toBe(true);
 	});
 });
 
 describe('Test getConfig method', () => {
-	const networkIdentifier = '4c09e6a781fc4c7bdb936ee815de8f94190f8a7519becd9de2081832be309a99';
 	const configPath = join(__dirname, '../../..', 'test/unit/fixtures/lisk-core');
 
 	it('should return valid config when custom config is not available', async () => {
-		const config = await getConfig(
-			mockCommand as Command,
-			configPath,
-			networkIdentifier,
-			undefined,
-		);
+		const config = await getConfig(mockCommand as Command, configPath);
 		const expectedConfig = {
 			system: {
 				dataPath: '~/.lisk',
@@ -165,7 +154,7 @@ describe('Test getConfig method', () => {
 				block: {
 					fromFile: './config/genesis_block.blob',
 				},
-				blockTime: 10,
+				blockTime: 5,
 				chainID: '00000000',
 				maxTransactionsSize: 15360,
 				minimumCertifyHeight: 1,
@@ -190,7 +179,7 @@ describe('Test getConfig method', () => {
 
 	it('should return valid config when custom config is available', async () => {
 		const customConfig = join(__dirname, '../../..', 'test/unit/fixtures/customConfig.json');
-		const config = await getConfig(Command as any, configPath, networkIdentifier, customConfig);
+		const config = await getConfig(Command as any, configPath, customConfig);
 
 		const expectedConfig = {
 			system: {

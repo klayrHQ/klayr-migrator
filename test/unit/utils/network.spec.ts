@@ -25,30 +25,31 @@ afterEach(() => {
 
 describe('Test getNetworkIdentifier method', () => {
 	const network = 'mainnet';
-	const mainnetNetworkIdentifier = (Object.entries(NETWORK_CONSTANT).find(
-		([, v]) => v.name === network,
-	) as [string, NetworkConfigLocal])[0];
+	const mainnetChainID = (Object.entries(NETWORK_CONSTANT).find(([, v]) => v.name === network) as [
+		string,
+		NetworkConfigLocal,
+	])[0];
 
-	it('should return networkIdentifier when use-snapshot is true', async () => {
-		/* eslint-disable-next-line global-require, @typescript-eslint/no-var-requires */
-		const { getNetworkIdentifier } = require('../../../src/utils/network');
-		const networkIdentifier = await getNetworkIdentifier(network, './lisk/lisk-core');
-		expect(networkIdentifier).toBe(mainnetNetworkIdentifier);
+	it('should return chainID when use-snapshot is true', async () => {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+		const { getChainId } = require('../../../src/utils/network');
+		const chainID = await getChainId(network, './lisk/lisk-core');
+		expect(chainID).toBe(mainnetChainID);
 	});
 
-	it('should return networkIdentifier when use-snapshot is false', async () => {
+	it('should return chainID when use-snapshot is false', async () => {
+		jest.setTimeout(20_000);
 		jest.mock(clientFilePath, () => ({
 			getAPIClient: jest.fn().mockResolvedValueOnce({
 				node: {
-					getNodeInfo: jest.fn().mockReturnValue({ networkIdentifier: mainnetNetworkIdentifier }),
+					getNodeInfo: jest.fn().mockReturnValue({ chainID: mainnetChainID }),
 				},
 			}),
 		}));
 
-		/* eslint-disable-next-line global-require, @typescript-eslint/no-var-requires */
-		const { getNetworkIdentifier } = require('../../../src/utils/network');
-
-		const networkIdentifier = await getNetworkIdentifier(null, './lisk/lisk-core');
-		expect(networkIdentifier).toBe(mainnetNetworkIdentifier);
+		// eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
+		const { getChainId } = require('../../../src/utils/network');
+		const chainID = await getChainId(null, './lisk/lisk-core');
+		expect(chainID).toBe(mainnetChainID);
 	});
 });

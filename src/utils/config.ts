@@ -20,8 +20,9 @@ import { join, resolve } from 'path';
 import { validator } from '@liskhq/lisk-validator';
 import { ApplicationConfig, applicationConfigSchema } from 'lisk-framework';
 import { objects } from '@liskhq/lisk-utils';
-import { ApplicationConfigV3, LoggerConfig } from '../types';
+import { ApplicationConfigV4, LoggerConfig } from '../types';
 import {
+	DEFAULT_LISK_CONFIG_PATH,
 	DEFAULT_VERSION,
 	MAX_BFT_WEIGHT_CAP,
 	NETWORK_CONSTANT,
@@ -70,17 +71,9 @@ export const getLogLevel = (loggerConfig: LoggerConfig): string => {
 export const getConfig = async (
 	_this: Command,
 	corePath: string,
-	_networkID: string,
 	customConfigPath?: string,
-): Promise<ApplicationConfigV3> => {
-	let network: string | Error = 'mainnet';
-	try {
-		network = getNetworkByNetworkID(_networkID);
-	} catch (err) {
-		_this.error(err as Error);
-	}
-
-	const dataDirConfigPath = join(corePath, 'config', network as string, 'config.json');
+): Promise<ApplicationConfigV4> => {
+	const dataDirConfigPath = join(corePath, 'config', 'config.json');
 	const dataDirConfig = await fs.readJSON(dataDirConfigPath);
 
 	const customConfig = customConfigPath
@@ -88,169 +81,165 @@ export const getConfig = async (
 		: {};
 
 	cli.action.start('Compiling Lisk Core configuration');
-	const config = objects.mergeDeep({}, dataDirConfig, customConfig) as ApplicationConfigV3;
+	const config = objects.mergeDeep({}, dataDirConfig, customConfig) as ApplicationConfigV4;
 	cli.action.stop();
 
 	return config;
 };
 
-export const resolveConfigPathByNetworkID = async (networkIdentifier: string): Promise<string> => {
-	const network = NETWORK_CONSTANT[networkIdentifier].name;
-	const configFilePath = join(__dirname, '../..', `config/${network}/config.json`);
-	return configFilePath;
-};
+export const resolveConfigDefaultPath = async (): Promise<string> => DEFAULT_LISK_CONFIG_PATH;
 
-export const createBackup = async (config: ApplicationConfigV3): Promise<void> => {
+export const createBackup = async (config: ApplicationConfigV4): Promise<void> => {
 	const backupPath = join(__dirname, '../..', 'backup');
 	mkdirSync(backupPath, { recursive: true });
 	writeFileSync(resolve(`${backupPath}/config.json`), JSON.stringify(config, null, '\t'));
 };
 
 export const migrateUserConfig = async (
-	configV3: ApplicationConfigV3,
-	configV4: ApplicationConfig,
+	configV4: ApplicationConfigV4,
+	configKlayrV4: ApplicationConfig,
 	snapshotHeight: number,
 ): Promise<ApplicationConfig> => {
 	cli.action.start('Starting migration of custom config properties.');
 
 	// Assign default version if not available
-	if (!configV4.system?.version) {
+	if (!configKlayrV4.system?.version) {
 		cli.action.start(`Setting config property 'system.version' to: ${DEFAULT_VERSION}.`);
-		configV4.system.version = DEFAULT_VERSION;
+		configKlayrV4.system.version = DEFAULT_VERSION;
 		cli.action.stop();
 	}
 
-	if (configV3?.rootPath) {
-		cli.action.start(`Setting config property 'system.dataPath' to: ${configV3.rootPath}.`);
-		configV4.system.dataPath = configV3.rootPath;
+	if (configV4?.rootPath) {
+		cli.action.start(`Setting config property 'system.dataPath' to: ${configV4.rootPath}.`);
+		configKlayrV4.system.dataPath = configV4.rootPath;
 		cli.action.stop();
 	}
 
-	if (configV3?.logger) {
-		const logLevel = getLogLevel(configV3.logger);
+	if (configV4?.logger) {
+		const logLevel = getLogLevel(configV4.logger);
 		cli.action.start(`Setting config property 'system.logLevel' to: ${logLevel}.`);
-		configV4.system.logLevel = logLevel;
+		configKlayrV4.system.logLevel = logLevel;
 		cli.action.stop();
 	}
 
-	if (configV3?.transactionPool) {
-		if (configV3?.transactionPool?.maxTransactions) {
+	if (configV4?.transactionPool) {
+		if (configV4?.transactionPool?.maxTransactions) {
 			cli.action.start(
-				`Setting config property 'transactionPool.maxTransactions' to: ${configV3.transactionPool.maxTransactions}.`,
+				`Setting config property 'transactionPool.maxTransactions' to: ${configV4.transactionPool.maxTransactions}.`,
 			);
-			((configV4.transactionPool
-				.maxTransactions as unknown) as number) = configV3.transactionPool.maxTransactions;
+			((configKlayrV4.transactionPool
+				.maxTransactions as unknown) as number) = configV4.transactionPool.maxTransactions;
 			cli.action.stop();
 		}
 
-		if (configV3?.transactionPool?.maxTransactionsPerAccount) {
+		if (configV4?.transactionPool?.maxTransactionsPerAccount) {
 			cli.action.start(
-				`Setting config property 'transactionPool.maxTransactionsPerAccount' to: ${configV3.transactionPool.maxTransactionsPerAccount}.`,
+				`Setting config property 'transactionPool.maxTransactionsPerAccount' to: ${configV4.transactionPool.maxTransactionsPerAccount}.`,
 			);
-			((configV4.transactionPool
-				.maxTransactionsPerAccount as unknown) as number) = configV3.transactionPool.maxTransactionsPerAccount;
+			((configKlayrV4.transactionPool
+				.maxTransactionsPerAccount as unknown) as number) = configV4.transactionPool.maxTransactionsPerAccount;
 			cli.action.stop();
 		}
 
-		if (configV3?.transactionPool?.transactionExpiryTime) {
+		if (configV4?.transactionPool?.transactionExpiryTime) {
 			cli.action.start(
-				`Setting config property 'transactionPool.transactionExpiryTime' to: ${configV3.transactionPool.transactionExpiryTime}.`,
+				`Setting config property 'transactionPool.transactionExpiryTime' to: ${configV4.transactionPool.transactionExpiryTime}.`,
 			);
-			((configV4.transactionPool
-				.transactionExpiryTime as unknown) as number) = configV3.transactionPool.transactionExpiryTime;
+			((configKlayrV4.transactionPool
+				.transactionExpiryTime as unknown) as number) = configV4.transactionPool.transactionExpiryTime;
 			cli.action.stop();
 		}
 
-		if (configV3?.transactionPool?.minEntranceFeePriority) {
+		if (configV4?.transactionPool?.minEntranceFeePriority) {
 			cli.action.start(
-				`Setting config property 'transactionPool.minEntranceFeePriority' to: ${configV3.transactionPool.minEntranceFeePriority}.`,
+				`Setting config property 'transactionPool.minEntranceFeePriority' to: ${configV4.transactionPool.minEntranceFeePriority}.`,
 			);
-			((configV4.transactionPool
-				.minEntranceFeePriority as unknown) as string) = configV3.transactionPool.minEntranceFeePriority;
+			((configKlayrV4.transactionPool
+				.minEntranceFeePriority as unknown) as string) = configV4.transactionPool.minEntranceFeePriority;
 			cli.action.stop();
 		}
 
-		if (configV3?.transactionPool?.minReplacementFeeDifference) {
+		if (configV4?.transactionPool?.minReplacementFeeDifference) {
 			cli.action.start(
-				`Setting config property 'transactionPool.minReplacementFeeDifference' to: ${configV3.transactionPool.minReplacementFeeDifference}.`,
+				`Setting config property 'transactionPool.minReplacementFeeDifference' to: ${configV4.transactionPool.minReplacementFeeDifference}.`,
 			);
-			((configV4.transactionPool
-				.minReplacementFeeDifference as unknown) as string) = configV3.transactionPool.minReplacementFeeDifference;
+			((configKlayrV4.transactionPool
+				.minReplacementFeeDifference as unknown) as string) = configV4.transactionPool.minReplacementFeeDifference;
 			cli.action.stop();
 		}
 	}
 
-	if (configV3?.rpc?.mode) {
-		cli.action.start(`Setting config property 'rpc.modes' to: ${configV3.rpc.mode}.`);
-		configV4.rpc.modes = [configV3.rpc.mode];
+	if (configV4?.rpc?.mode) {
+		cli.action.start(`Setting config property 'rpc.modes' to: ${configV4.rpc.mode}.`);
+		configKlayrV4.rpc.modes = [configV4.rpc.mode];
 		cli.action.stop();
 	}
 
-	if (configV3?.network) {
-		if (configV3?.network?.port) {
-			cli.action.start(`Setting config property 'network.port' to: ${configV3.network.port}.`);
-			configV4.network.port = configV3.network.port;
+	if (configV4?.network) {
+		if (configV4?.network?.port) {
+			cli.action.start(`Setting config property 'network.port' to: ${configV4.network.port}.`);
+			configKlayrV4.network.port = configV4.network.port;
 			cli.action.stop();
 		}
 
-		if (configV3?.network?.hostIp) {
-			cli.action.start(`Setting config property 'network.host' to: ${configV3.network.hostIp}.`);
-			configV4.network.host = configV3.network.hostIp;
+		if (configV4?.network?.hostIp) {
+			cli.action.start(`Setting config property 'network.host' to: ${configV4.network.hostIp}.`);
+			configKlayrV4.network.host = configV4.network.hostIp;
 			cli.action.stop();
 		}
 
-		if (configV3?.network?.maxOutboundConnections) {
+		if (configV4?.network?.maxOutboundConnections) {
 			cli.action.start(
-				`Setting config property 'network.maxOutboundConnections' to: ${configV3.network.maxOutboundConnections}.`,
+				`Setting config property 'network.maxOutboundConnections' to: ${configV4.network.maxOutboundConnections}.`,
 			);
-			configV4.network.maxOutboundConnections = configV3.network.maxOutboundConnections;
+			configKlayrV4.network.maxOutboundConnections = configV4.network.maxOutboundConnections;
 			cli.action.stop();
 		}
 
-		if (configV3?.network?.maxInboundConnections) {
+		if (configV4?.network?.maxInboundConnections) {
 			cli.action.start(
-				`Setting config property 'network.maxInboundConnections' to: ${configV3.network.maxInboundConnections}.`,
+				`Setting config property 'network.maxInboundConnections' to: ${configV4.network.maxInboundConnections}.`,
 			);
-			configV4.network.maxInboundConnections = configV3.network.maxInboundConnections;
+			configKlayrV4.network.maxInboundConnections = configV4.network.maxInboundConnections;
 			cli.action.stop();
 		}
 
-		if (configV3?.network?.wsMaxPayload) {
+		if (configV4?.network?.wsMaxPayload) {
 			cli.action.start(
-				`Setting config property 'network.wsMaxPayload' to: ${configV3.network.wsMaxPayload}.`,
+				`Setting config property 'network.wsMaxPayload' to: ${configV4.network.wsMaxPayload}.`,
 			);
-			configV4.network.wsMaxPayload = configV3.network.wsMaxPayload;
+			configKlayrV4.network.wsMaxPayload = configV4.network.wsMaxPayload;
 			cli.action.stop();
 		}
 
-		if (configV3?.network?.advertiseAddress) {
+		if (configV4?.network?.advertiseAddress) {
 			cli.action.start(
-				`Setting config property 'network.advertiseAddress' to: ${configV3.network.advertiseAddress}.`,
+				`Setting config property 'network.advertiseAddress' to: ${configV4.network.advertiseAddress}.`,
 			);
-			configV4.network.advertiseAddress = configV3.network.advertiseAddress;
+			configKlayrV4.network.advertiseAddress = configV4.network.advertiseAddress;
 			cli.action.stop();
 		}
 	}
 
 	cli.action.start("Calculating and updating config property 'genesis.minimumCertifyHeight'.");
-	configV4.genesis.minimumCertifyHeight =
+	configKlayrV4.genesis.minimumCertifyHeight =
 		snapshotHeight +
 		1 +
 		(POS_INIT_ROUNDS + NUMBER_ACTIVE_VALIDATORS - 1) *
 			(NUMBER_ACTIVE_VALIDATORS + NUMBER_STANDBY_VALIDATORS);
 	cli.action.stop();
 
-	if (configV4.modules?.pos && !configV4.modules?.pos?.maxBFTWeightCap) {
+	if (configKlayrV4.modules?.pos && !configKlayrV4.modules?.pos?.maxBFTWeightCap) {
 		cli.action.start(
 			`Setting config property 'modules.pos.maxBFTWeightCap' to: ${MAX_BFT_WEIGHT_CAP}.`,
 		);
-		configV4.modules.pos.maxBFTWeightCap = MAX_BFT_WEIGHT_CAP;
+		configKlayrV4.modules.pos.maxBFTWeightCap = MAX_BFT_WEIGHT_CAP;
 		cli.action.stop();
 	}
 
 	cli.action.stop();
 
-	return configV4;
+	return configKlayrV4;
 };
 
 export const validateConfig = async (config: ApplicationConfig): Promise<boolean> => {

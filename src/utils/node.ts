@@ -32,11 +32,12 @@ import {
 	ERROR_CODE,
 	LEGACY_DB_PATH,
 	SNAPSHOT_DIR,
-	LISK_V3_BACKUP_DATA_DIR,
+	LISK_V4_BACKUP_DATA_DIR,
 } from '../constants';
 import { MigratorException } from './exception';
 
-const INSTALL_LISK_CORE_COMMAND = 'npm i -g lisk-core@^4.0.1';
+const INSTALL_KLAYR_CORE_COMMAND =
+	'npm i -g klayr-core@^4.0.3-alpha.0 --registry https://npm.klayr.dev';
 const INSTALL_PM2_COMMAND = 'npm i -g pm2';
 const PM2_FILE_NAME = 'pm2.migrator.config.json';
 
@@ -47,15 +48,15 @@ const REGEX = {
 	OPTION_OR_VALUE: /=<(option|value)>$/,
 };
 
-let liskCoreStartCommand: string;
+let klayrCoreStartCommand: string;
 
-export const getLiskCoreStartCommand = (): string => liskCoreStartCommand;
+export const getKlayrCoreStartCommand = (): string => klayrCoreStartCommand;
 
-export const installLiskCore = async (): Promise<string> => execAsync(INSTALL_LISK_CORE_COMMAND);
+export const installKlayrCore = async (): Promise<string> => execAsync(INSTALL_KLAYR_CORE_COMMAND);
 
 export const installPM2 = async (): Promise<string> => execAsync(INSTALL_PM2_COMMAND);
 
-export const isLiskCoreV3Running = async (liskCorePath: string): Promise<boolean> => {
+export const isLiskCoreV4Running = async (liskCorePath: string): Promise<boolean> => {
 	try {
 		const client = await getAPIClient(liskCorePath, true);
 		const nodeInfo = await client.node.getNodeInfo();
@@ -65,18 +66,18 @@ export const isLiskCoreV3Running = async (liskCorePath: string): Promise<boolean
 	}
 };
 
-const backupLegacyDataDir = async (_this: Command, liskCoreV3DataPath: string) => {
+const backupLegacyDataDir = async (_this: Command, liskCoreV4DataPath: string) => {
 	try {
-		if (!liskCoreV3DataPath.includes('.lisk/lisk-core')) {
+		if (!liskCoreV4DataPath.includes('.lisk/lisk-core')) {
 			fs.mkdirSync(`${homedir()}/.lisk`, { recursive: true });
 		}
 
-		_this.log(`Backing Lisk Core v3 data directory at ${liskCoreV3DataPath}`);
-		renameSync(liskCoreV3DataPath, LISK_V3_BACKUP_DATA_DIR);
-		_this.log(`Backed Lisk Core v3 data directory to: ${LISK_V3_BACKUP_DATA_DIR}`);
+		_this.log(`Backing Lisk Core v4 data directory at ${liskCoreV4DataPath}`);
+		renameSync(liskCoreV4DataPath, LISK_V4_BACKUP_DATA_DIR);
+		_this.log(`Backed Lisk Core v4 data directory to: ${LISK_V4_BACKUP_DATA_DIR}`);
 	} catch (err) {
 		throw new MigratorException(
-			`Unable to backup Lisk Core v3 data directory due to: ${(err as Error).message}`,
+			`Unable to backup Lisk Core v4 data directory due to: ${(err as Error).message}`,
 			ERROR_CODE.BACKUP_LEGACY_DATA_DIR,
 		);
 	}
@@ -84,12 +85,12 @@ const backupLegacyDataDir = async (_this: Command, liskCoreV3DataPath: string) =
 
 const copyLegacyDB = async (_this: Command) => {
 	try {
-		_this.log(`Copying the v3.x snapshot to legacy.db at ${LEGACY_DB_PATH}`);
+		_this.log(`Copying the Lisk Core v4.x snapshot to legacy.db at ${LEGACY_DB_PATH}`);
 		await copyDir(
-			path.resolve(LISK_V3_BACKUP_DATA_DIR, SNAPSHOT_DIR),
+			path.resolve(LISK_V4_BACKUP_DATA_DIR, SNAPSHOT_DIR),
 			resolveAbsolutePath(LEGACY_DB_PATH),
 		);
-		_this.log(`Legacy database for Lisk Core v4 has been created at ${LEGACY_DB_PATH}`);
+		_this.log(`Legacy database for Klayr Core v4 has been created at ${LEGACY_DB_PATH}`);
 	} catch (err) {
 		throw new MigratorException(
 			`Unable to copy ${path.basename(LEGACY_DB_PATH)} due to: ${(err as Error).message}`,
@@ -141,31 +142,35 @@ export const validateStartCommandFlags = async (
 	}
 };
 
-const resolveLiskCoreStartCommand = async (_this: Command, network: string, configPath: string) => {
-	const baseStartCommand = `lisk-core start --network ${network}`;
+const resolveKlayrCoreStartCommand = async (
+	_this: Command,
+	network: string,
+	configPath: string,
+) => {
+	const baseStartCommand = `klayr-core start --network ${network}`;
 	const defaultStartCommand = `${baseStartCommand} --config ${configPath}`;
 
 	const isUserConfirmed = await cli.confirm(
-		`Default start command: ${defaultStartCommand}\nWould you like to customize the Lisk Core v4 start command? [yes/no]`,
+		`Default start command: ${defaultStartCommand}\nWould you like to customize the Klayr Core v4 start command? [yes/no]`,
 	);
 
 	if (!isUserConfirmed) {
-		liskCoreStartCommand = defaultStartCommand;
+		klayrCoreStartCommand = defaultStartCommand;
 		return defaultStartCommand;
 	}
 
 	// Let user customize the start command
 	let customStartCommand = baseStartCommand;
 
-	_this.log('Customizing Lisk Core start command');
+	_this.log('Customizing Klayr Core start command');
 	_this.log(
 		`Kindly do not forget to include '--config ${configPath}' in your custom start command, if you still want to use this config.`,
 	);
 	let userInput = await cli.prompt(
-		"Please provide the Lisk Core start command flags (e.g. --api-ws), except the '--network (-n)' flag:",
+		"Please provide the Klayr Core start command flags (e.g. --api-ws), except the '--network (-n)' flag:",
 	);
 
-	const command = "lisk-core start --help | grep -- '^\\s\\+-' | cut -d ' ' -f 3,4";
+	const command = "klayr-core start --help | grep -- '^\\s\\+-' | cut -d ' ' -f 3,4";
 	const allowedFlags = await execAsync(command);
 	const allowedFlagsArray = allowedFlags.split(/\n+/).filter(e => !!e);
 
@@ -182,22 +187,22 @@ const resolveLiskCoreStartCommand = async (_this: Command, network: string, conf
 
 		if (numTriesLeft >= 0) {
 			userInput = await cli.prompt(
-				"Invalid flags passed. Please provide the Lisk Core start command flags (e.g. --api-ws), except the '--network (-n)' flag again:",
+				"Invalid flags passed. Please provide the Klayr Core start command flags (e.g. --api-ws), except the '--network (-n)' flag again:",
 			);
 		} else {
 			throw new Error(
-				'Invalid Lisk Core start command flags provided. Cannot proceed with Lisk Core v4 auto-start. Please continue manually. Exiting!!!',
+				'Invalid Klayr Core start command flags provided. Cannot proceed with Klayr Core v4 auto-start. Please continue manually. Exiting!!!',
 			);
 		}
 	}
 
-	liskCoreStartCommand = customStartCommand;
+	klayrCoreStartCommand = customStartCommand;
 	return customStartCommand;
 };
 
-export const startLiskCore = async (
+export const startKlayrCore = async (
 	_this: Command,
-	liskCoreV3DataPath: string,
+	liskCoreV4DataPath: string,
 	_config: PartialApplicationConfig,
 	network: string,
 	outputDir: string,
@@ -213,19 +218,19 @@ export const startLiskCore = async (
 			throw new Error(`Port ${rpcPort} is not available to start the RPC server.`);
 		}
 
-		// Backup Lisk Core v3 data directory and legacy snapshot into the Core v4 legacy.db
-		await backupLegacyDataDir(_this, liskCoreV3DataPath);
+		// Backup Lisk Core v4 data directory and legacy snapshot into the Core v4 legacy.db
+		await backupLegacyDataDir(_this, liskCoreV4DataPath);
 		await copyLegacyDB(_this);
 
 		const configPath = await getFinalConfigPath(outputDir, network);
 
 		const pm2Config = {
-			name: 'lisk-core-v4',
-			script: await resolveLiskCoreStartCommand(_this, network, configPath),
+			name: 'klayr-core-v4',
+			script: await resolveKlayrCoreStartCommand(_this, network, configPath),
 		};
 
 		const isUserConfirmed = await cli.confirm(
-			`Start Lisk Core with the following pm2 configuration? [yes/no]\n${JSON.stringify(
+			`Start Klayr Core with the following pm2 configuration? [yes/no]\n${JSON.stringify(
 				pm2Config,
 				null,
 				'\t',
@@ -234,7 +239,7 @@ export const startLiskCore = async (
 
 		if (!isUserConfirmed) {
 			_this.error(
-				'User did not confirm to start Lisk Core v4 with the customized PM2 config. Skipping the Lisk Core v4 auto-start process. Please start the node manually.',
+				'User did not confirm to start Klayr Core v4 with the customized PM2 config. Skipping the Klayr Core v4 auto-start process. Please start the node manually.',
 			);
 		}
 
@@ -252,7 +257,7 @@ export const startLiskCore = async (
 	} catch (err) {
 		throw new MigratorException(
 			`${(err as Error).message}`,
-			err instanceof MigratorException ? err.code : ERROR_CODE.LISK_CORE_START,
+			err instanceof MigratorException ? err.code : ERROR_CODE.KLAYR_CORE_START,
 		);
 	}
 };

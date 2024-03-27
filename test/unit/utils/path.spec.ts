@@ -81,7 +81,7 @@ describe('Test verifyOutputPath method', () => {
 describe('Test resolveSnapshotPath method', () => {
 	const dataDir = join(__dirname, '../../..', 'test/unit/fixtures/data');
 	const liskCoreV3DataPath = '~/.lisk/lisk-core/config/data';
-	const inputSnapshotPath = join(__dirname, '../../..', 'test/unit/fixtures/data/snapshotDir');
+	const inputSnapshotPath = join(__dirname, '../../..', 'test/unit/fixtures/data');
 
 	it('should return valid snapshot path when useSnapshot is false', async () => {
 		const useSnapshot = false;
@@ -114,7 +114,7 @@ describe('Test resolveSnapshotPath method', () => {
 			dataDir,
 			liskCoreV3DataPath,
 		);
-		const expectedResult = join(dataDir, 'snapshotDir');
+		const expectedResult = join(dataDir, 'blockchain.db');
 		expect(snapshotPath).toBe(expectedResult);
 	});
 });

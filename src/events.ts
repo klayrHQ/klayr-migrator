@@ -13,7 +13,6 @@
  */
 import { resolve } from 'path';
 import { Command } from '@oclif/command';
-import { Block } from '@liskhq/lisk-chain';
 import { address } from '@liskhq/lisk-cryptography';
 import { APIClient } from '@liskhq/lisk-api-client';
 import { write } from './utils/fs';
@@ -30,13 +29,13 @@ export const captureForgingStatusAtSnapshotHeight = (
 ) => {
 	client.subscribe(EVENT_NEW_BLOCK, async data => {
 		const { block: encodedBlock } = (data as unknown) as Record<string, string>;
-		const newBlock = client.block.decode(Buffer.from(encodedBlock, 'hex')) as Block;
+		const newBlock = client.block.decode(Buffer.from(encodedBlock, 'hex'));
 
 		if (newBlock.header.height === snapshotHeight) {
 			const forgingStatuses: ForgingStatus[] = await client.invoke('app:getForgingStatus');
 			const finalForgingStatuses: ForgingStatus[] = forgingStatuses.map(entry => ({
 				...entry,
-				lskAddress: getLisk32AddressFromAddress(Buffer.from(entry.address, 'hex')),
+				lskAddress: getLisk32AddressFromAddress(Buffer.from(entry.address, 'hex'), 'kly'),
 			}));
 
 			if (finalForgingStatuses.length) {

@@ -43,12 +43,11 @@ export const resolveSnapshotPath = async (
 	useSnapshot: boolean,
 	snapshotPath: string,
 	dataDir: string,
-	liskCoreV3DataPath: string,
+	liskCoreV4DataPath: string,
 ) => {
-	if (!useSnapshot) return join(liskCoreV3DataPath, SNAPSHOT_DIR);
+	if (!useSnapshot) return join(liskCoreV4DataPath, SNAPSHOT_DIR);
 	if (snapshotPath && !snapshotPath.endsWith('.tar.gz')) return snapshotPath;
 
 	const [snapshotDirNameExtracted] = (await getFiles(dataDir)) as string[];
-	const snapshotFilePathExtracted = join(dataDir, snapshotDirNameExtracted);
-	return snapshotFilePathExtracted;
+	return join(dataDir, snapshotDirNameExtracted);
 };

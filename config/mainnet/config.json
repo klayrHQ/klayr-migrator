@@ -1,6 +1,6 @@
 {
 	"system": {
-		"dataPath": "~/.lisk",
+		"dataPath": "~/.klayr",
 		"logLevel": "info",
 		"keepEventsForHeights": 300
 	},
@@ -14,7 +14,7 @@
 		"block": {
 			"fromFile": "./config/genesis_block.blob"
 		},
-		"blockTime": 10,
+		"blockTime": 5,
 		"chainID": "00000000",
 		"maxTransactionsSize": 15360,
 		"minimumCertifyHeight": 23461753
@@ -77,7 +77,7 @@
 			"tokenID": "0000000000000000",
 			"offset": 2160,
 			"distance": 3000000,
-			"brackets": ["500000000", "400000000", "300000000", "200000000", "100000000"]
+			"brackets": ["500000000", "400000000", "300000000", "200000000", "100000000", "200000000"]
 		},
 		"fee": {
 			"feeTokenID": "0000000000000000"

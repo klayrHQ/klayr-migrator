@@ -32,7 +32,7 @@ export const getCommandsToExecPostMigration = async (
 		const forgingStatusJson = JSON.parse(forgingStatusString);
 
 		const chainID = parseInt(networkConstant.tokenID.substring(0, 2), 16);
-
+		// todo update lskAddress
 		for (const forgingStatus of forgingStatusJson) {
 			commandsToExecute.push(
 				'\n',
@@ -42,16 +42,16 @@ export const getCommandsToExecPostMigration = async (
 
 			const keysFilepath = resolve(outputDir, FILE_NAME.KEYS);
 			commandsToExecute.push(
-				`lisk-core keys:create --chainid ${chainID} --output ${keysFilepath} --add-legacy`,
-				`lisk-core keys:import --file-path ${keysFilepath}`,
-				`lisk-core endpoint:invoke random_setHashOnion '{ "address":"${forgingStatus.lskAddress}"}'`,
-				`lisk-core endpoint:invoke generator_setStatus '{ "address":"${
+				`klayr-core keys:create --chainid ${chainID} --output ${keysFilepath} --add-legacy`,
+				`klayr-core keys:import --file-path ${keysFilepath}`,
+				`klayr-core endpoint:invoke random_setHashOnion '{ "address":"${forgingStatus.lskAddress}"}'`,
+				`klayr-core endpoint:invoke generator_setStatus '{ "address":"${
 					forgingStatus.lskAddress
 				}", "height": ${forgingStatus.height ?? snapshotHeight}, "maxHeightGenerated":  ${
 					forgingStatus.maxHeightPreviouslyForged ?? snapshotHeight
 				}, "maxHeightPrevoted":  ${forgingStatus.maxHeightPrevoted ?? snapshotHeight} }' --pretty`,
-				`lisk-core generator:enable ${forgingStatus.lskAddress} --use-status-value`,
-				'lisk-core transaction:create legacy registerKeys 400000 --key-derivation-path=legacy --send',
+				`klayr-core generator:enable ${forgingStatus.lskAddress} --use-status-value`,
+				'klayr-core transaction:create legacy registerKeys 400000 --key-derivation-path=legacy --send',
 			);
 
 			commandsToExecute.push('\n', '-----------------------------------------------------', '\n');

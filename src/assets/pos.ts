@@ -1,4 +1,5 @@
 /*
+ * Copyright © 2024 Klayr Holding
  * Copyright © 2022 Lisk Foundation
  *
  * See the LICENSE file at the top-level directory of this distribution
@@ -11,195 +12,289 @@
  *
  * Removal or modification of this copyright notice is prohibited.
  */
-import { posGenesisStoreSchema } from 'lisk-framework';
-import { Database } from '@liskhq/lisk-db';
-import { address } from '@liskhq/lisk-cryptography';
-
+import { posGenesisStoreSchema } from 'klayr-framework';
+import { Database, StateDB } from '@liskhq/lisk-db';
+import { validatorStoreSchema } from 'lisk-framework/dist-node/modules/pos/stores/validator';
+import { stakerStoreSchema } from 'lisk-framework/dist-node/modules/pos/stores/staker';
 import {
-	INVALID_BLS_KEY,
-	DUMMY_PROOF_OF_POSSESSION,
-	INVALID_ED25519_KEY,
-	POS_INIT_ROUNDS,
-	ROUND_LENGTH,
-	Q96_ZERO,
-	MAX_COMMISSION,
-	MODULE_NAME_POS,
-	EMPTY_STRING,
-} from '../constants';
-
+	ValidatorKeys,
+	validatorKeysSchema,
+} from 'lisk-framework/dist-node/modules/validators/stores/validator_keys';
+import { codec } from '@liskhq/lisk-codec';
+import { Transaction, transactionSchema } from '@liskhq/lisk-chain';
 import {
-	Account,
+	getAddressFromPublicKey,
+	getLisk32AddressFromAddress,
+} from '@liskhq/lisk-cryptography/dist-node/address';
+import { snapshotStoreSchema } from 'lisk-framework/dist-node/modules/pos/stores/snapshot';
+import { calculateStakeRewards } from 'klayr-framework/dist-node/modules/pos/utils';
+import { registerKeysParamsSchema } from '../schemas';
+import { getStateStore } from '../utils/store';
+import {
 	GenesisDataEntry,
-	VoteWeightsWrapper,
-	VoteWeight,
 	DelegateWeight,
 	ValidatorEntryBuffer,
-	Stake,
 	StakerBuffer,
 	ValidatorEntry,
 	Staker,
 	GenesisAssetEntry,
 	PoSStoreEntry,
+	BLSTransaction,
 } from '../types';
+import {
+	DUMMY_PROOF_OF_POSSESSION,
+	POS_INIT_ROUNDS,
+	ROUND_LENGTH,
+	Q96_ZERO,
+	MODULE_NAME_POS,
+	DB_PREFIX_POS_VALIDATOR_STORE,
+	DB_PREFIX_POS_STAKER_STORE,
+	DB_PREFIX_VALIDATORS_KEYS_STORE,
+	DB_PREFIX_POS_SNAPSHOT_STORE,
+	NUMBER_KLAYR_ACTIVE_VALIDATORS,
+} from '../constants';
+import { getTokenAccounts, sortUsersSubstore } from './token';
 
-import { getBlockPublicKeySet } from '../utils/block';
-import { getTransactionPublicKeySet } from '../utils/transaction';
-
-const { getLisk32AddressFromAddress, getAddressFromPublicKey } = address;
+const AMOUNT_ZERO = BigInt('0');
 
 const ceiling = (a: number, b: number) => {
 	if (b === 0) throw new Error('Can not divide by 0.');
 	return Math.floor((a + b - 1) / b);
 };
 
-export const getValidatorKeys = async (
-	accounts: Account[],
-	db: Database,
-	pageSize: number,
-): Promise<Record<string, string>> => {
-	const delegateSet = new Set();
-	for (const account of accounts) {
-		if (account.dpos.delegate.username !== '') {
-			delegateSet.add(account.address.toString('hex'));
-		}
-	}
-
-	const blockPublicKeySet = await getBlockPublicKeySet(db, pageSize);
-	const txPublicKeySet = await getTransactionPublicKeySet(db, pageSize);
-
-	const keys: Record<string, string> = {};
-	for (const key of blockPublicKeySet) {
-		keys[getAddressFromPublicKey(Buffer.from(key, 'hex')).toString('hex')] = key;
-	}
-	for (const key of txPublicKeySet) {
-		// if public key included in block, skip
-		if (blockPublicKeySet.has(key)) {
-			// eslint-disable-next-line no-continue
-			continue;
-		}
-		const trxSenderAddress: string = getAddressFromPublicKey(Buffer.from(key, 'hex')).toString(
-			'hex',
-		);
-		if (delegateSet.has(trxSenderAddress)) {
-			keys[trxSenderAddress] = key;
-		}
-	}
-	return keys;
-};
-
-export const createValidatorsArrayEntry = async (
-	account: Account,
-	validatorKeys: Record<string, string>,
-	snapshotHeight: number,
-	tokenID: string,
-): Promise<ValidatorEntryBuffer | null> => {
-	if (account.dpos.delegate.username !== EMPTY_STRING) {
-		const validatorAddress = account.address.toString('hex');
-
-		const validator: ValidatorEntryBuffer = Object.freeze({
-			address: account.address,
-			name: account.dpos.delegate.username,
-			blsKey: INVALID_BLS_KEY,
-			proofOfPossession: DUMMY_PROOF_OF_POSSESSION,
-			generatorKey: validatorKeys[validatorAddress] || INVALID_ED25519_KEY,
-			lastGeneratedHeight: account.dpos.delegate.lastForgedHeight,
-			isBanned: true,
-			reportMisbehaviorHeights: account.dpos.delegate.pomHeights,
-			consecutiveMissedBlocks: account.dpos.delegate.consecutiveMissedBlocks,
-			lastCommissionIncreaseHeight: snapshotHeight,
-			commission: MAX_COMMISSION,
-			sharingCoefficients: [
-				{
-					tokenID,
-					coefficient: Q96_ZERO,
-				},
-			],
-		});
-
-		return validator;
-	}
-	return null;
-};
-
-export const getStakes = async (account: Account, tokenID: string): Promise<Stake[]> => {
-	const stakes = account.dpos.sentVotes.map(vote => ({
-		...vote,
-		sharingCoefficients: [
-			{
-				tokenID,
-				coefficient: Q96_ZERO,
-			},
-		],
+export const getSnapshots = async (
+	db: StateDB,
+): Promise<{ round: number; snapshot: DelegateWeight[] }[]> => {
+	const snapshotStore = getStateStore(db, DB_PREFIX_POS_SNAPSHOT_STORE);
+	const snapshots = await snapshotStore.iterateWithSchema<{
+		validatorWeightSnapshot: never;
+	}>(
+		{
+			gte: Buffer.alloc(8, 0),
+			lte: Buffer.alloc(8, 255),
+		},
+		snapshotStoreSchema,
+	);
+	return snapshots.map(snapshot => ({
+		round: snapshot.key.readUInt32BE(0),
+		snapshot: snapshot.value.validatorWeightSnapshot,
 	}));
-
-	const sortedStakes = stakes
-		.sort((a, b) => a.delegateAddress.compare(b.delegateAddress))
-		.map(({ delegateAddress, ...entry }) => ({
-			...entry,
-			validatorAddress: getLisk32AddressFromAddress(delegateAddress),
-		}));
-
-	return sortedStakes;
 };
 
-export const createStakersArrayEntry = async (
-	account: Account,
-	tokenID: string,
-): Promise<StakerBuffer | null> => {
-	if (account.dpos.sentVotes.length || account.dpos.unlocking.length) {
-		const staker: StakerBuffer = {
-			address: account.address,
-			stakes: await getStakes(account, tokenID),
-			pendingUnlocks: account.dpos.unlocking.map(
-				({ delegateAddress, unvoteHeight, ...unlock }) => ({
-					validatorAddress: getLisk32AddressFromAddress(delegateAddress),
-					amount: unlock.amount,
-					unstakeHeight: unvoteHeight,
+export const getBLSKey = async (db: StateDB, key: Buffer): Promise<ValidatorKeys> => {
+	const blsStore = getStateStore(db, DB_PREFIX_VALIDATORS_KEYS_STORE);
+	return blsStore.getWithSchema(key, validatorKeysSchema);
+};
+
+export const getBLSTransactions = async (db: Database) => {
+	const stream = await db.createReadStream({
+		gte: Buffer.concat([Buffer.from([6]), Buffer.alloc(64, 0)]),
+		lte: Buffer.concat([Buffer.from([6]), Buffer.alloc(64, 255)]),
+	});
+	return new Promise<BLSTransaction[]>((resolve, reject) => {
+		const kv: BLSTransaction[] = [];
+		stream
+			.on('data', ({ value }: { key: Buffer; value: Buffer }) => {
+				const transaction = codec.decode(transactionSchema, value) as Transaction;
+				if (transaction.module === 'legacy' && transaction.command === 'registerKeys') {
+					const params = codec.decode<BLSTransaction['params']>(
+						registerKeysParamsSchema,
+						transaction.params,
+					);
+					kv.push({
+						senderAddress: getAddressFromPublicKey(transaction.senderPublicKey),
+						params,
+					});
+				}
+			})
+			.on('error', error => {
+				reject(error);
+			})
+			.on('end', () => {
+				resolve(kv);
+			});
+	});
+};
+
+export const getValidatorKeys = async (
+	db: StateDB,
+	blockchainDB: Database,
+): Promise<{ validatorKeys: ValidatorEntry[]; validatorIndex: Record<string, number> }> => {
+	const posValidatorStore = getStateStore(db, DB_PREFIX_POS_VALIDATOR_STORE);
+	const validators = (await posValidatorStore.iterateWithSchema(
+		{
+			gte: Buffer.alloc(21, 0),
+			lte: Buffer.alloc(21, 255),
+		},
+		validatorStoreSchema,
+	)) as { key: Buffer; value: ValidatorEntryBuffer }[];
+	const proofOfPossessions = await getBLSTransactions(blockchainDB);
+	const validatorIndex: Record<string, number> = {};
+	const validatorKeys: ValidatorEntry[] = await Promise.all(
+		validators.map(async ({ key, value }, index) => {
+			const bls = await getBLSKey(db, key);
+			const address = getLisk32AddressFromAddress(key, 'kly');
+			validatorIndex[address] = index;
+			return {
+				...value,
+				address,
+				sharingCoefficients: value.sharingCoefficients.map(coefficient => ({
+					tokenID: coefficient.tokenID,
+					coefficient: !coefficient.coefficient ? Q96_ZERO : coefficient.coefficient,
+				})),
+				blsKey: bls.blsKey.toString('hex'),
+				generatorKey: bls.generatorKey.toString('hex'),
+				proofOfPossession:
+					proofOfPossessions
+						.find(p => p.senderAddress.equals(key))
+						?.params?.proofOfPossession?.toString('hex') ?? DUMMY_PROOF_OF_POSSESSION,
+			};
+		}),
+	);
+	return { validatorKeys, validatorIndex };
+};
+
+export const getStakers = async (db: StateDB): Promise<Staker[]> => {
+	const posStakerStore = getStateStore(db, DB_PREFIX_POS_STAKER_STORE);
+	const stakers = (await posStakerStore.iterateWithSchema(
+		{
+			gte: Buffer.alloc(21, 0),
+			lte: Buffer.alloc(21, 255),
+		},
+		stakerStoreSchema,
+	)) as {
+		key: Buffer;
+		value: StakerBuffer;
+	}[];
+	return stakers.map(({ key, value }) => ({
+		address: getLisk32AddressFromAddress(key, 'kly'),
+		stakes: value.stakes.map(stake => ({
+			...stake,
+			sharingCoefficients: stake.sharingCoefficients.map(coefficient => ({
+				tokenID: coefficient.tokenID.toString('hex'),
+				coefficient: !coefficient.coefficient ? Q96_ZERO : coefficient.coefficient,
+			})),
+			validatorAddress: getLisk32AddressFromAddress(stake.validatorAddress, 'kly'),
+		})),
+		pendingUnlocks: value.pendingUnlocks.map(unlock => ({
+			...unlock,
+			validatorAddress: getLisk32AddressFromAddress(unlock.validatorAddress, 'kly'),
+		})),
+	}));
+};
+
+export const processRewards = async (db: StateDB, blockchainDB: Database) => {
+	const { validatorKeys, validatorIndex } = await getValidatorKeys(db, blockchainDB);
+	// Get all user token accounts for token module
+	const { userStore, userKeyIndex } = await getTokenAccounts(db);
+	const sortedStakers = await getStakers(db);
+	const claimedStakersIndex: Record<string, number> = {};
+	const sortedClaimedStakers = sortedStakers.map(
+		(staker, index): Staker => {
+			claimedStakersIndex[staker.address] = index;
+			const stakerIndex = userKeyIndex[staker.address];
+			return {
+				...staker,
+				stakes: staker.stakes.map(stake => {
+					const validatorUserIndex = userKeyIndex[stake.validatorAddress];
+					if (stake.sharingCoefficients[0]) {
+						const sharingCoefficient = {
+							coefficient: stake.sharingCoefficients[0].coefficient,
+							tokenID: Buffer.from(stake.sharingCoefficients[0].tokenID, 'hex'),
+						};
+						const stakeReward = calculateStakeRewards(
+							sharingCoefficient,
+							stake.amount,
+							validatorKeys[validatorIndex[stake.validatorAddress]].sharingCoefficients[0],
+						);
+						if (stakeReward > BigInt(0) && staker.address !== stake.validatorAddress) {
+							const posIndex = userStore[validatorUserIndex].lockedBalances.findIndex(
+								lb => lb.module === 'pos',
+							);
+							userStore[validatorUserIndex].lockedBalances[posIndex].amount -= stakeReward;
+							userStore[stakerIndex].availableBalance += stakeReward;
+						}
+						return {
+							...stake,
+							sharingCoefficients: validatorKeys[
+								validatorIndex[stake.validatorAddress]
+							].sharingCoefficients.map(coefficient => ({
+								tokenID: coefficient.tokenID.toString('hex'),
+								coefficient: coefficient.coefficient,
+							})),
+						};
+					}
+					return stake;
 				}),
-			),
-		};
-		return staker;
-	}
-	return null;
+			};
+		},
+	);
+
+	validatorKeys.forEach(validator => {
+		const validatorStakeIndex = claimedStakersIndex[validator.address];
+		if (validatorStakeIndex > -1) {
+			const validatorUserIndex = userKeyIndex[validator.address];
+			const staked = sortedClaimedStakers[validatorStakeIndex].stakes.reduce(
+				(acc: bigint, stake) => acc + stake.amount,
+				AMOUNT_ZERO,
+			);
+			const pendingUnlocked = sortedClaimedStakers[validatorStakeIndex].pendingUnlocks.reduce(
+				(acc: bigint, unlock) => acc + unlock.amount,
+				AMOUNT_ZERO,
+			);
+			const posLockedBalanceIndex = userStore[validatorUserIndex].lockedBalances.findIndex(
+				lb => lb.module === 'pos',
+			);
+			userStore[validatorUserIndex].availableBalance +=
+				userStore[validatorUserIndex].lockedBalances[posLockedBalanceIndex].amount -
+				staked -
+				pendingUnlocked;
+			userStore[validatorUserIndex].lockedBalances[posLockedBalanceIndex].amount =
+				staked + pendingUnlocked;
+		}
+	});
+	const { totalSupply, sortedUserSubstore } = sortUsersSubstore(userStore);
+
+	return {
+		sortedClaimedStakers,
+		sortedUserSubstore,
+		totalSupply,
+		validatorKeys,
+	};
 };
 
 export const createGenesisDataObj = async (
-	accounts: Account[],
-	delegatesVoteWeights: VoteWeightsWrapper,
+	accounts: ValidatorEntry[],
+	delegatesVoteWeights: { round: number; snapshot: DelegateWeight[] }[],
 	snapshotHeight: number,
 ): Promise<GenesisDataEntry> => {
 	const r = ceiling(snapshotHeight, ROUND_LENGTH);
+	const voteWeightR2 = delegatesVoteWeights.find(voteWeight => voteWeight.round === r);
 
-	const voteWeightR2 = delegatesVoteWeights.voteWeights.find(
-		(voteWeight: VoteWeight) => voteWeight.round === r - 2,
-	);
-
-	if (!voteWeightR2 || voteWeightR2.delegates.length === 0) {
-		throw new Error(`Delegate vote weights for round ${r - 2} (r-2) unavailable, cannot proceed.`);
+	if (!voteWeightR2 || voteWeightR2.snapshot.length === 0) {
+		throw new Error(`Delegate vote weights for round ${r} (r) unavailable, cannot proceed.`);
 	}
 
 	const initValidators: Buffer[] = [];
-	const accountBannedMap = new Map(
-		accounts.map(account => [account.address, account.dpos.delegate.isBanned]),
-	);
+	const accountBannedMap = new Map(accounts.map(account => [account.address, account.isBanned]));
 
 	// Sorting delegates by voteWeight is unnecessary as framework already does it
-	const { delegates } = voteWeightR2;
-	delegates.forEach((delegate: DelegateWeight) => {
-		const isAccountBanned = accountBannedMap.get(delegate.address);
+	const { snapshot } = voteWeightR2;
+	snapshot.forEach((delegate: DelegateWeight) => {
+		const isAccountBanned = accountBannedMap.get(delegate.address.toString('hex'));
 		if (!isAccountBanned) {
 			initValidators.push(delegate.address);
 		}
 	});
 
-	const sortedInitValidators = initValidators.slice(0, 101).sort((a, b) => a.compare(b));
+	const sortedInitValidators = initValidators
+		.slice(0, NUMBER_KLAYR_ACTIVE_VALIDATORS)
+		.sort((a, b) => a.compare(b));
 
-	const genesisDataObj: GenesisDataEntry = {
+	return {
 		initRounds: POS_INIT_ROUNDS,
-		initValidators: sortedInitValidators.map(entry => getLisk32AddressFromAddress(entry)),
+		initValidators: sortedInitValidators.map(entry => getLisk32AddressFromAddress(entry, 'kly')),
 	};
-
-	return genesisDataObj;
 };
 
 export const getPoSModuleEntry = async (

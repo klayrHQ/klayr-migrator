@@ -143,7 +143,7 @@ class KlayrMigrator extends Command {
 			env: 'NETWORK',
 			description:
 				"Network to be considered for the migration. Depends on the '--snapshot-path' flag.",
-			options: ['mainnet', 'testnet'],
+			options: ['mainnet', 'testnet', 'devnet'],
 			exclusive: [
 				'lisk-core-data-path',
 				'config',

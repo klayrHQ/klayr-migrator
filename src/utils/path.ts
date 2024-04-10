@@ -14,7 +14,7 @@
 import { homedir } from 'os';
 import { isAbsolute, join } from 'path';
 import { getFiles } from './fs';
-import { DEFAULT_LISK_CORE_PATH, SNAPSHOT_DIR } from '../constants';
+import { BACKUP_DIR, DEFAULT_LISK_CORE_PATH } from '../constants';
 
 export const resolveAbsolutePath = (path: string) => {
 	if (isAbsolute(path)) {
@@ -45,7 +45,7 @@ export const resolveSnapshotPath = async (
 	dataDir: string,
 	liskCoreV4DataPath: string,
 ) => {
-	if (!useSnapshot) return join(liskCoreV4DataPath, SNAPSHOT_DIR);
+	if (!useSnapshot) return join(liskCoreV4DataPath, BACKUP_DIR);
 	if (snapshotPath && !snapshotPath.endsWith('.tar.gz')) return snapshotPath;
 
 	const [snapshotDirNameExtracted] = (await getFiles(dataDir)) as string[];

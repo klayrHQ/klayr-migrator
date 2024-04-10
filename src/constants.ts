@@ -237,6 +237,7 @@ export const LENGTH_BLS_KEY = 48;
 
 export const DEFAULT_DATA_DIR = 'data';
 export const SNAPSHOT_DIR = `${DEFAULT_DATA_DIR}/backup`;
+export const BACKUP_DIR = 'backup';
 export const MIN_SUPPORTED_LISK_CORE_VERSION = '4.0.1';
 export const DEFAULT_LISK_CORE_PATH = `${homedir()}/.lisk/lisk-core`;
 export const DEFAULT_LISK_CONFIG_PATH = `${homedir()}/.lisk/lisk-core/config/config.json`;

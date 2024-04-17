@@ -36,8 +36,7 @@ import {
 } from '../constants';
 import { MigratorException } from './exception';
 
-const INSTALL_KLAYR_CORE_COMMAND =
-	'npm i -g klayr-core@^4.0.3-alpha.0 --registry https://npm.klayr.dev';
+const INSTALL_KLAYR_CORE_COMMAND = 'npm i -g klayr-core';
 const INSTALL_PM2_COMMAND = 'npm i -g pm2';
 const PM2_FILE_NAME = 'pm2.migrator.config.json';
 

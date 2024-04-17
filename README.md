@@ -20,15 +20,15 @@ The following dependencies need to be installed in order to run applications cre
 
 | Dependencies | Version        |
 | ------------ | -------------- |
-| NodeJS       | ^18.16         |
-| NPM          | 8.3.1 or later |
+| NodeJS       | ^18.20.2       |
+| NPM          | 9.8.1 or later |
 | Lisk Core    | 4.0.1 or later |
 
 **NOTE**: It is important that NodeJS is installed using NVM. Please refer our documentation [here](https://klayr.xyz/documentation/klayr-core/v4/setup/npm.html#node-js-npm).
 
 ### System requirements
 
-The following system requirements are recommended to run Klayr Migrator v2.0.0:
+The following system requirements are recommended to run Klayr Migrator v2.0.8:
 
 #### Memory
 
@@ -81,7 +81,7 @@ $ npm install -g klayr-migrator
 $ lisk-migrator COMMAND
 running command...
 $ klayr-migrator (-v|--version|version)
-klayr-migrator/2.0.1 darwin-arm64 node-v18.16.1
+klayr-migrator/2.0.8 darwin-arm64 node-v18.20.1
 $ klayr-migrator --help [COMMAND]
 USAGE
   $ klayr-migrator COMMAND
@@ -119,7 +119,6 @@ The [migration guide](./docs/migration.md) explains the transition process from 
 | Want to chat with our community | [Reach them on Discord](http://klayr.chat)                                                     |
 | Found a bug                     | [Open a new issue](https://github.com/klayrhq/klayr-migrator/issues/new)                       |
 | Found a security issue          | [See our bounty program](https://blog.lisk.io/announcing-lisk-bug-bounty-program-5895bdd46ed4) |
-| Want to share your research     | [Propose your research](https://research.lisk.io)                                              |
 | Want to develop with us         | [Create a fork](https://github.com/klayrhq/klayr-migrator/fork)                                |
 
 ## License

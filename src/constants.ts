@@ -184,12 +184,36 @@ export const NETWORK_CONSTANT: { [key: string]: NetworkConfigLocal } = {
 		prevSnapshotBlockHeight: HEIGHT_PREVIOUS_SNAPSHOT_BLOCK.MAINNET,
 		additionalAccounts: [
 			{
-				address: Buffer.from('870d6772fcec81fbc02b7044605bc1359610a032', 'hex'),
-				balance: BigInt(500000000000000),
+				address: Buffer.from('5fa998cb3aa5e233a34b1e8fd1a243b2e38bf1cb', 'hex'),
+				balance: BigInt(4_500_000_00000000),
 			},
 			{
-				address: Buffer.from('870d6772fcec81fbc02b7044605bc1359610a0a0', 'hex'),
-				balance: BigInt(500000000000000),
+				address: Buffer.from('48328d8ccc152d3ab018a6632374c0e278a4b25a', 'hex'),
+				balance: BigInt(1_000_000_00000000),
+			},
+			{
+				address: Buffer.from('aee55db4c8f7fd8bfc18b6ecba6632e4580aee8a', 'hex'),
+				balance: BigInt(9_500_000_00000000),
+			},
+			{
+				address: Buffer.from('7765b9adb4cc65162c20c300da3e6734a9cbfbcc', 'hex'),
+				balance: BigInt(3_000_000_00000000),
+			},
+			{
+				address: Buffer.from('6b25ca51fff16b727ae9cd331935ad4a1fe27363', 'hex'),
+				balance: BigInt(2_000_000_00000000),
+			},
+			{
+				address: Buffer.from('5ffe83fe10100825f49808c8a9d3319052c2530d', 'hex'),
+				balance: BigInt(5_000_000_00000000),
+			},
+			{
+				address: Buffer.from('6fee835c819aba154b3099ebd897162bbaf28a99', 'hex'),
+				balance: BigInt(3_000_000_00000000),
+			},
+			{
+				address: Buffer.from('db6998c8aa025435c81a646a868c3a56a05c5058', 'hex'),
+				balance: BigInt(2_000_000_00000000),
 			},
 		],
 	},
@@ -199,12 +223,36 @@ export const NETWORK_CONSTANT: { [key: string]: NetworkConfigLocal } = {
 		prevSnapshotBlockHeight: HEIGHT_PREVIOUS_SNAPSHOT_BLOCK.TESTNET,
 		additionalAccounts: [
 			{
-				address: Buffer.from('870d6772fcec81fbc02b7044605bc1359610a032', 'hex'),
-				balance: BigInt(500000000000000),
+				address: Buffer.from('5fa998cb3aa5e233a34b1e8fd1a243b2e38bf1cb', 'hex'),
+				balance: BigInt(4_500_000_00000000),
 			},
 			{
-				address: Buffer.from('870d6772fcec81fbc02b7044605bc1359610a0a0', 'hex'),
-				balance: BigInt(500000000000000),
+				address: Buffer.from('48328d8ccc152d3ab018a6632374c0e278a4b25a', 'hex'),
+				balance: BigInt(1_000_000_00000000),
+			},
+			{
+				address: Buffer.from('aee55db4c8f7fd8bfc18b6ecba6632e4580aee8a', 'hex'),
+				balance: BigInt(9_500_000_00000000),
+			},
+			{
+				address: Buffer.from('7765b9adb4cc65162c20c300da3e6734a9cbfbcc', 'hex'),
+				balance: BigInt(3_000_000_00000000),
+			},
+			{
+				address: Buffer.from('6b25ca51fff16b727ae9cd331935ad4a1fe27363', 'hex'),
+				balance: BigInt(2_000_000_00000000),
+			},
+			{
+				address: Buffer.from('5ffe83fe10100825f49808c8a9d3319052c2530d', 'hex'),
+				balance: BigInt(5_000_000_00000000),
+			},
+			{
+				address: Buffer.from('6fee835c819aba154b3099ebd897162bbaf28a99', 'hex'),
+				balance: BigInt(3_000_000_00000000),
+			},
+			{
+				address: Buffer.from('db6998c8aa025435c81a646a868c3a56a05c5058', 'hex'),
+				balance: BigInt(2_000_000_00000000),
 			},
 		],
 	},

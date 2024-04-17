@@ -43,8 +43,8 @@ const LOG_LEVEL_PRIORITY = Object.freeze({
 	TRACE: 5,
 }) as Record<string, number>;
 
-export const getNetworkByNetworkID = (_networkID: string): string | Error => {
-	const networkInfo = NETWORK_CONSTANT[_networkID];
+export const getNetworkByNetworkID = (networkID: string): string | Error => {
+	const networkInfo = NETWORK_CONSTANT[networkID];
 	if (!networkInfo) {
 		throw new Error('Migrator running against unidentified network. Cannot proceed.');
 	}
@@ -89,7 +89,8 @@ export const getConfig = async (
 	return config;
 };
 
-export const resolveConfigDefaultPath = async (): Promise<string> => DEFAULT_LISK_CONFIG_PATH;
+export const resolveConfigDefaultPath = async (networkName: string): Promise<string> =>
+	resolve(DEFAULT_LISK_CONFIG_PATH, networkName, 'config.json');
 
 export const createBackup = async (config: ApplicationConfig): Promise<void> => {
 	const backupPath = join(__dirname, '../..', 'backup');

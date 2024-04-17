@@ -59,7 +59,7 @@ import {
 	startKlayrCore,
 	isLiskCoreV4Running,
 	getKlayrCoreStartCommand,
-	installKlayrCore,
+	// installKlayrCore,
 } from './utils/node';
 import { resolveAbsolutePath, resolveSnapshotPath, verifyOutputPath } from './utils/path';
 import { execAsync } from './utils/process';
@@ -291,7 +291,7 @@ class KlayrMigrator extends Command {
 			cli.action.stop();
 
 			// Create an app instance for creating genesis block
-			const defaultConfigFilePath = await resolveConfigDefaultPath();
+			const defaultConfigFilePath = await resolveConfigDefaultPath(networkConstant.name);
 			const defaultConfigV4 = await fs.readJSON(defaultConfigFilePath);
 
 			cli.action.start(`Exporting genesis block to the path ${outputDir}`);
@@ -303,7 +303,6 @@ class KlayrMigrator extends Command {
 				const configV4: ApplicationConfig = customConfigPath
 					? await getConfig(this, liskCoreV4DataPath, customConfigPath)
 					: await getConfig(this, liskCoreV4DataPath);
-
 				cli.action.start('Creating backup for old config');
 				await createBackup(configV4);
 				cli.action.stop();
@@ -336,7 +335,7 @@ class KlayrMigrator extends Command {
 			}
 
 			cli.action.start('Installing Klayr Core v4');
-			await installKlayrCore();
+			// await installKlayrCore();
 			cli.action.stop();
 
 			cli.action.start('Creating genesis block');

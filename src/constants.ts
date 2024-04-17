@@ -240,7 +240,7 @@ export const SNAPSHOT_DIR = `${DEFAULT_DATA_DIR}/backup`;
 export const BACKUP_DIR = 'backup';
 export const MIN_SUPPORTED_LISK_CORE_VERSION = '4.0.1';
 export const DEFAULT_LISK_CORE_PATH = `${homedir()}/.lisk/lisk-core`;
-export const DEFAULT_LISK_CONFIG_PATH = `${homedir()}/.lisk/lisk-core/config/config.json`;
+export const DEFAULT_LISK_CONFIG_PATH = './config';
 export const DEFAULT_KLAYR_CORE_PATH = `${homedir()}/.klayr/klayr-core`;
 export const LEGACY_DB_PATH = `${DEFAULT_LISK_CORE_PATH}/${DEFAULT_DATA_DIR}/legacy.db`;
 

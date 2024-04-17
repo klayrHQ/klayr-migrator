@@ -59,7 +59,7 @@ import {
 	startKlayrCore,
 	isLiskCoreV4Running,
 	getKlayrCoreStartCommand,
-	// installKlayrCore,
+	installKlayrCore,
 } from './utils/node';
 import { resolveAbsolutePath, resolveSnapshotPath, verifyOutputPath } from './utils/path';
 import { execAsync } from './utils/process';
@@ -335,7 +335,7 @@ class KlayrMigrator extends Command {
 			}
 
 			cli.action.start('Installing Klayr Core v4');
-			// await installKlayrCore();
+			await installKlayrCore();
 			cli.action.stop();
 
 			cli.action.start('Creating genesis block');
@@ -381,7 +381,7 @@ class KlayrMigrator extends Command {
 
 						// Ask user to manually stop Lisk Core v3 and continue
 						const isLiskCoreV4Stopped = await cli.confirm(
-							"Please stop Lisk Core v3 to continue. Type 'yes' and press Enter when ready. [yes/no]",
+							"Please stop Lisk Core to continue. Type 'yes' and press Enter when ready. [yes/no]",
 						);
 
 						if (isLiskCoreV4Stopped) {
@@ -394,17 +394,17 @@ class KlayrMigrator extends Command {
 
 								if (numTriesLeft >= 0) {
 									const isStopReconfirmed = await cli.confirm(
-										"Lisk Core v4 still running. Please stop the node, type 'yes' to proceed and 'no' to exit. [yes/no]",
+										"Lisk Core still running. Please stop the node, type 'yes' to proceed and 'no' to exit. [yes/no]",
 									);
 									if (!isStopReconfirmed) {
 										throw new Error(
-											`Cannot proceed with Klayr Core v4 auto-start. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
+											`Cannot proceed with Klayr Core auto-start. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
 										);
 									} else if (numTriesLeft === 0 && isStopReconfirmed) {
 										const isCoreV4StillRunning = await isLiskCoreV4Running(liskCoreV4DataPath);
 										if (isCoreV4StillRunning) {
 											throw new Error(
-												`Cannot auto-start Klayr Core v4 as Lisk Core v4 is still running. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
+												`Cannot auto-start Klayr Core as Lisk Core is still running. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
 											);
 										}
 									}
@@ -432,12 +432,12 @@ class KlayrMigrator extends Command {
 								cli.action.stop();
 							} else {
 								this.log(
-									'User did not accept the migrated config. Skipping the Klayr Core v4 auto-start process.',
+									'User did not accept the migrated config. Skipping the Klayr Core auto-start process.',
 								);
 							}
 						} else {
 							throw new Error(
-								`User did not confirm Lisk Core v4 node shutdown. Skipping the Klayr Core v4 auto-start process. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
+								`User did not confirm Lisk Core node shutdown. Skipping the Klayr Core auto-start process. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
 							);
 						}
 					} catch (err) {
@@ -451,9 +451,9 @@ class KlayrMigrator extends Command {
 					}
 				} else {
 					this.log(
-						`Please copy the contents of ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/) in order to access legacy blockchain information.`,
+						`Please copy the contents of ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/) in order to access legacy blockchain information.`,
 					);
-					this.log('Please copy genesis block to the Klayr Core V4 network directory.');
+					this.log('Please copy genesis block to the Klayr Core network directory.');
 				}
 			}
 		} catch (error) {
@@ -477,7 +477,7 @@ class KlayrMigrator extends Command {
 				commandsToExecute.push(
 					'\n',
 					'## Create the genesis block',
-					'## NOTE: This requires installing Klayr Core v4 locally. Please visit https://klayr.xyz/documentation/klayr-core/v4/setup/npm.html for further instructions',
+					'## NOTE: This requires installing Klayr Core locally. Please visit https://klayr.xyz/documentation/klayr-core/setup/npm.html for further instructions',
 					'\n',
 				);
 				commandsToExecute.push(genesisBlockCreateCommand);
@@ -492,7 +492,7 @@ class KlayrMigrator extends Command {
 					ERROR_CODE.BACKUP_LEGACY_DATA_DIR,
 				].includes(code)
 			) {
-				commandsToExecute.push('\n', '## Backup Lisk Core v4 data directory', '\n');
+				commandsToExecute.push('\n', '## Backup Lisk Core data directory', '\n');
 				commandsToExecute.push(backupLegacyDataDirCommand);
 				commandsToExecute.push('\n', '-----------------------------------------------------', '\n');
 			}
@@ -508,7 +508,7 @@ class KlayrMigrator extends Command {
 			) {
 				commandsToExecute.push(
 					'\n',
-					'## Copy legacy (v4) blockchain information to Klayr Core v4 legacy.db',
+					'## Copy legacy (v4) blockchain information to Klayr Core legacy.db',
 					'\n',
 				);
 				commandsToExecute.push(copyLegacyDBCommand);
@@ -527,7 +527,7 @@ class KlayrMigrator extends Command {
 			) {
 				commandsToExecute.push(
 					'\n',
-					'## Klayr Core v4 start command - Please modify if necessary',
+					'## Klayr Core start command - Please modify if necessary',
 					'\n',
 				);
 				commandsToExecute.push(klayrCoreStartCommand);

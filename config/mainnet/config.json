@@ -2,7 +2,10 @@
 	"system": {
 		"dataPath": "~/.klayr",
 		"logLevel": "info",
-		"keepEventsForHeights": 300
+		"keepEventsForHeights": 300,
+		"keepInclusionProofsForHeights": 300,
+		"inclusionProofKeys": [],
+		"enableMetrics": false
 	},
 	"rpc": {
 		"modes": ["ipc", "ws"],
@@ -20,46 +23,46 @@
 		"minimumCertifyHeight": 23461753
 	},
 	"network": {
-		"version": "5.0",
+		"version": "5.1",
 		"seedPeers": [
 			{
-				"ip": "mainnet-seed-01.lisk.com",
+				"ip": "mainnet-seed-01.klayr.xyz",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-02.lisk-nodes.net",
+				"ip": "mainnet-seed-02.klayr.one",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-03.lisk.com",
+				"ip": "mainnet-seed-03.klayr.network",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-04.lisk-nodes.net",
+				"ip": "mainnet-seed-04.klayr.net",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-05.lisk.com",
+				"ip": "mainnet-seed-05.klayr.xyz",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-06.lisk-nodes.net",
+				"ip": "mainnet-seed-06.klayr.net",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-07.lisk.com",
+				"ip": "mainnet-seed-07.klayr.one",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-08.lisk-nodes.net",
+				"ip": "mainnet-seed-08.klayr.xyz",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-09.lisk.com",
+				"ip": "mainnet-seed-09.klayr.network",
 				"port": 7667
 			},
 			{
-				"ip": "mainnet-seed-10.lisk-nodes.net",
+				"ip": "mainnet-seed-10.klayr.net",
 				"port": 7667
 			}
 		],

@@ -12,6 +12,7 @@
  * Removal or modification of this copyright notice is prohibited.
  */
 /* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import * as fs from 'fs-extra';
 import cli from 'cli-ux';
 import { Command } from '@oclif/command';
@@ -20,8 +21,9 @@ import { join, resolve } from 'path';
 import { validator } from '@liskhq/lisk-validator';
 import { ApplicationConfig, applicationConfigSchema } from 'lisk-framework';
 import { objects } from '@liskhq/lisk-utils';
-import { ApplicationConfigV4, LoggerConfig } from '../types';
+import { LoggerConfig } from '../types';
 import {
+	BLOCK_TIME,
 	DEFAULT_LISK_CONFIG_PATH,
 	DEFAULT_VERSION,
 	MAX_BFT_WEIGHT_CAP,
@@ -72,7 +74,7 @@ export const getConfig = async (
 	_this: Command,
 	corePath: string,
 	customConfigPath?: string,
-): Promise<ApplicationConfigV4> => {
+): Promise<ApplicationConfig> => {
 	const dataDirConfigPath = join(corePath, 'config', 'config.json');
 	const dataDirConfig = await fs.readJSON(dataDirConfigPath);
 
@@ -81,7 +83,7 @@ export const getConfig = async (
 		: {};
 
 	cli.action.start('Compiling Lisk Core configuration');
-	const config = objects.mergeDeep({}, dataDirConfig, customConfig) as ApplicationConfigV4;
+	const config = objects.mergeDeep({}, dataDirConfig, customConfig) as ApplicationConfig;
 	cli.action.stop();
 
 	return config;
@@ -89,39 +91,132 @@ export const getConfig = async (
 
 export const resolveConfigDefaultPath = async (): Promise<string> => DEFAULT_LISK_CONFIG_PATH;
 
-export const createBackup = async (config: ApplicationConfigV4): Promise<void> => {
+export const createBackup = async (config: ApplicationConfig): Promise<void> => {
 	const backupPath = join(__dirname, '../..', 'backup');
 	mkdirSync(backupPath, { recursive: true });
 	writeFileSync(resolve(`${backupPath}/config.json`), JSON.stringify(config, null, '\t'));
 };
 
 export const migrateUserConfig = async (
-	configV4: ApplicationConfigV4,
+	configV4: ApplicationConfig,
 	configKlayrV4: ApplicationConfig,
 	snapshotHeight: number,
 ): Promise<ApplicationConfig> => {
 	cli.action.start('Starting migration of custom config properties.');
 
 	// Assign default version if not available
+	// Assign system config properties
 	if (!configKlayrV4.system?.version) {
 		cli.action.start(`Setting config property 'system.version' to: ${DEFAULT_VERSION}.`);
 		configKlayrV4.system.version = DEFAULT_VERSION;
 		cli.action.stop();
 	}
 
-	if (configV4?.rootPath) {
-		cli.action.start(`Setting config property 'system.dataPath' to: ${configV4.rootPath}.`);
-		configKlayrV4.system.dataPath = configV4.rootPath;
+	if (configV4?.system?.logLevel) {
+		cli.action.start(
+			`Setting config property 'system.logLevel' to: ${configV4?.system?.logLevel}.`,
+		);
+		configKlayrV4.system.logLevel = configV4?.system?.logLevel;
 		cli.action.stop();
 	}
 
-	if (configV4?.logger) {
-		const logLevel = getLogLevel(configV4.logger);
-		cli.action.start(`Setting config property 'system.logLevel' to: ${logLevel}.`);
-		configKlayrV4.system.logLevel = logLevel;
+	if (configV4?.system?.keepEventsForHeights) {
+		cli.action.start(
+			`Setting config property 'system.keepEventsForHeights' to: ${configV4.system.keepEventsForHeights}.`,
+		);
+		configKlayrV4.system.keepEventsForHeights = configV4.system.keepEventsForHeights;
 		cli.action.stop();
 	}
 
+	if (configV4?.system?.keepInclusionProofsForHeights) {
+		cli.action.start(
+			`Setting config property 'system.keepInclusionProofsForHeights' to: ${configV4.system.keepInclusionProofsForHeights}.`,
+		);
+		configKlayrV4.system.keepInclusionProofsForHeights =
+			configV4.system.keepInclusionProofsForHeights;
+		cli.action.stop();
+	}
+
+	if (configV4?.system?.inclusionProofKeys) {
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		cli.action.start(
+			`Setting config property 'system.inclusionProofKeys' to: ${configV4.system.inclusionProofKeys}.`,
+		);
+		configKlayrV4.system.inclusionProofKeys = configV4.system.inclusionProofKeys;
+		cli.action.stop();
+	}
+
+	if (configV4?.system?.enableMetrics) {
+		cli.action.start('Setting config property system.enableMetrics');
+		configKlayrV4.system.enableMetrics = configV4.system.enableMetrics;
+		cli.action.stop();
+	}
+
+	// Assign rpc config properties
+	if (configV4?.rpc?.modes) {
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		cli.action.start(`Setting config property 'rpc.modes' to: ${configV4.rpc.modes}.`);
+		configKlayrV4.rpc.modes = configV4.rpc.modes;
+		cli.action.stop();
+	}
+	if (configV4?.rpc?.port) {
+		cli.action.start(`Setting config property 'rpc.port' to: ${configV4.rpc.port}.`);
+		configKlayrV4.rpc.port = configV4.rpc.port;
+		cli.action.stop();
+	}
+	if (configV4?.rpc?.host) {
+		cli.action.start(`Setting config property 'rpc.host' to: ${configV4.rpc.host}.`);
+		configKlayrV4.rpc.host = configV4.rpc.host;
+		cli.action.stop();
+	}
+	if (configV4?.rpc?.allowedMethods) {
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		cli.action.start(
+			`Setting config property 'rpc.allowedMethods' to: ${configV4.rpc.allowedMethods}.`,
+		);
+		configKlayrV4.rpc.allowedMethods = configV4.rpc.allowedMethods;
+		cli.action.stop();
+	}
+	if (configV4?.rpc?.accessControlAllowOrigin) {
+		cli.action.start(
+			`Setting config property 'rpc.accessControlAllowOrigin' to: ${configV4.rpc.accessControlAllowOrigin}.`,
+		);
+		configKlayrV4.rpc.accessControlAllowOrigin = configV4.rpc.accessControlAllowOrigin;
+		cli.action.stop();
+	}
+
+	// Assign genesis config properties
+	if (configV4?.genesis?.block?.fromFile || configV4?.genesis?.block?.blob) {
+		cli.action.start('Setting config property "genesis.block".');
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		configKlayrV4.genesis.block = { ...configKlayrV4.genesis.block, ...configV4.genesis.block };
+		cli.action.stop();
+	}
+	if (!configKlayrV4?.genesis?.blockTime) {
+		cli.action.start(`Setting config property 'genesis.blockTime' to: ${BLOCK_TIME}.`);
+		configKlayrV4.genesis.blockTime = BLOCK_TIME;
+		cli.action.stop();
+	}
+	if (configV4?.genesis?.chainID) {
+		cli.action.start(`Setting config property 'genesis.chainID' to: ${configV4.genesis.chainID}.`);
+		configKlayrV4.genesis.chainID = configV4.genesis.chainID;
+		cli.action.stop();
+	}
+	if (configV4?.genesis?.maxTransactionsSize) {
+		cli.action.start('Setting config property `genesis.maxTransactionsSize`.');
+		configKlayrV4.genesis.maxTransactionsSize = configV4.genesis.maxTransactionsSize;
+		cli.action.stop();
+	}
+
+	cli.action.start("Calculating and updating config property 'genesis.minimumCertifyHeight'.");
+	configKlayrV4.genesis.minimumCertifyHeight =
+		snapshotHeight +
+		1 +
+		(POS_INIT_ROUNDS + NUMBER_ACTIVE_VALIDATORS - 1) *
+			(NUMBER_ACTIVE_VALIDATORS + NUMBER_STANDBY_VALIDATORS);
+	cli.action.stop();
+
+	// Assign transaction pool config properties
 	if (configV4?.transactionPool) {
 		if (configV4?.transactionPool?.maxTransactions) {
 			cli.action.start(
@@ -169,12 +264,7 @@ export const migrateUserConfig = async (
 		}
 	}
 
-	if (configV4?.rpc?.mode) {
-		cli.action.start(`Setting config property 'rpc.modes' to: ${configV4.rpc.mode}.`);
-		configKlayrV4.rpc.modes = [configV4.rpc.mode];
-		cli.action.stop();
-	}
-
+	// Assign network config properties
 	if (configV4?.network) {
 		if (configV4?.network?.port) {
 			cli.action.start(`Setting config property 'network.port' to: ${configV4.network.port}.`);
@@ -182,9 +272,9 @@ export const migrateUserConfig = async (
 			cli.action.stop();
 		}
 
-		if (configV4?.network?.hostIp) {
-			cli.action.start(`Setting config property 'network.host' to: ${configV4.network.hostIp}.`);
-			configKlayrV4.network.host = configV4.network.hostIp;
+		if (configV4?.network?.host) {
+			cli.action.start(`Setting config property 'network.host' to: ${configV4.network.host}.`);
+			configKlayrV4.network.host = configV4.network.host;
 			cli.action.stop();
 		}
 
@@ -221,14 +311,7 @@ export const migrateUserConfig = async (
 		}
 	}
 
-	cli.action.start("Calculating and updating config property 'genesis.minimumCertifyHeight'.");
-	configKlayrV4.genesis.minimumCertifyHeight =
-		snapshotHeight +
-		1 +
-		(POS_INIT_ROUNDS + NUMBER_ACTIVE_VALIDATORS - 1) *
-			(NUMBER_ACTIVE_VALIDATORS + NUMBER_STANDBY_VALIDATORS);
-	cli.action.stop();
-
+	// Assign forging config properties
 	if (configKlayrV4.modules?.pos && !configKlayrV4.modules?.pos?.maxBFTWeightCap) {
 		cli.action.start(
 			`Setting config property 'modules.pos.maxBFTWeightCap' to: ${MAX_BFT_WEIGHT_CAP}.`,

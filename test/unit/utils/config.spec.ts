@@ -29,7 +29,7 @@ import {
 	getConfig,
 	resolveConfigDefaultPath,
 } from '../../../src/utils/config';
-import { ApplicationConfigV4, LoggerConfig } from '../../../src/types';
+import { LoggerConfig } from '../../../src/types';
 
 const migratedConfigFilePath = join(__dirname, 'test/config');
 const expectedBackupPath = join(__dirname, '../../..', 'backup');
@@ -83,7 +83,7 @@ describe('Migrate user configuration', () => {
 	it('should migrate user configuration', async () => {
 		const snapshotHeight = 10815;
 		const config = ((await migrateUserConfig(
-			(configV3 as unknown) as ApplicationConfigV4,
+			(configV3 as unknown) as ApplicationConfig,
 			(configV4 as unknown) as ApplicationConfig,
 			snapshotHeight as number,
 		)) as unknown) as ApplicationConfig;
@@ -130,7 +130,7 @@ describe('Test resolveConfigDefaultPath method', () => {
 
 describe('Test createBackup method', () => {
 	it('should create backup', async () => {
-		await createBackup((configV3 as unknown) as ApplicationConfigV4);
+		await createBackup((configV3 as unknown) as ApplicationConfig);
 		expect(fs.existsSync(expectedBackupPath)).toBe(true);
 	});
 });

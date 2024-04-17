@@ -641,117 +641,117 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@klayr/api-client@^6.0.2-alpha.0":
-  version "6.0.2-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/api-client/-/api-client-6.0.2-alpha.0.tgz#e0656c5b5a5c736a7aa73ea3d9397ab506e7229e"
-  integrity sha512-XLE8WHJXoM1AChsab0+4WbtAK9nzzyGEnRJa/ZfrS2ArcT7JdlX0j2RAGwU8Nq1lAFWaNiv5c72Qx83nkKX/qA==
+"@klayr/api-client@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@klayr/api-client/-/api-client-6.0.2.tgz#f704b41168616b9a30a6f8720253324fd2e87856"
+  integrity sha512-zXFlm0RelZ6IVzOZ698Vkf5g0WWX3COIN7EloKh1yx0iIQmZ5t8QPUtp18KOP3sy6RdTzkxVen97cmyvUbat/Q==
   dependencies:
-    "@klayr/codec" "^0.4.1-alpha.0"
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/transactions" "^6.0.1-alpha.0"
-    "@klayr/validator" "^0.8.1-alpha.0"
+    "@klayr/codec" "^0.4.1"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/transactions" "^6.0.1"
+    "@klayr/validator" "^0.8.1"
     isomorphic-ws "4.0.1"
     ws "8.11.0"
     zeromq "6.0.0-beta.6"
 
-"@klayr/chain@^0.5.1-alpha.0":
-  version "0.5.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/chain/-/chain-0.5.1-alpha.0.tgz#9baba1bf373a67a05d31ab6476a4ed53f90fefe5"
-  integrity sha512-cDN+J886YbpKPaS7GKXMUIwyM2/t9GmIU/CI6vre3+Ib1QV+pVQRjfzDq8M956HmcDCjakSYo22mtM81QC1/PQ==
+"@klayr/chain@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@klayr/chain/-/chain-0.5.1.tgz#7cbaab34b71b1c7eefe61d99bc20d5b617869fed"
+  integrity sha512-MDlt7NpYRIYPRCb/PPyMZdE9rKN36UmW465C8oc7jb1C3H3hwMHWd/KhKDCUXjJdBzBESqgEwksrrNp//fClNg==
   dependencies:
-    "@klayr/codec" "^0.4.1-alpha.0"
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/tree" "^0.4.1-alpha.0"
-    "@klayr/utils" "^0.4.1-alpha.0"
-    "@klayr/validator" "^0.8.1-alpha.0"
+    "@klayr/codec" "^0.4.1"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/tree" "^0.4.1"
+    "@klayr/utils" "^0.4.1"
+    "@klayr/validator" "^0.8.1"
     "@liskhq/lisk-db" "0.3.10"
     debug "4.3.4"
 
-"@klayr/codec@^0.4.1-alpha.0":
-  version "0.4.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/codec/-/codec-0.4.1-alpha.0.tgz#94fbaf73713e30f2212882d5de97853cfb394270"
-  integrity sha512-D2zt0r4/bJYHced9q03AfnlUjdgv0reUeLN7YGLpcFJvOqf6ceF1Aj9+gXwX8Q5LPx2Aun8sj/suxhf1t3kV4w==
+"@klayr/codec@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@klayr/codec/-/codec-0.4.1.tgz#6c9f32233fdeb7e6cbb18cf7dd5c2e03b2b7425d"
+  integrity sha512-tcNAs3kKIcKrdoFwmg80S6BKm231lHQCkKeRV1ti0ukTf1y8aQtoVd2betnQAnHZdJ8nLwaEBhs6sD9Sgto6RA==
   dependencies:
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/utils" "^0.4.1-alpha.0"
-    "@klayr/validator" "^0.8.1-alpha.0"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/utils" "^0.4.1"
+    "@klayr/validator" "^0.8.1"
 
-"@klayr/cryptography@^4.0.1-alpha.0":
-  version "4.0.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/cryptography/-/cryptography-4.0.1-alpha.0.tgz#506c83fca50f7a47948593d9e9e522c18c23b1a4"
-  integrity sha512-mzHIpDOCc2krtpvCdO02NSpILbH2Hj+R75S5bOMCn1Iyex1W/TOClDWrWTuMhIDjxDsALH1l1QtVkkB2mL2o9Q==
+"@klayr/cryptography@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@klayr/cryptography/-/cryptography-4.0.1.tgz#5cff3f6deca402991ba77dcc210dae81548df930"
+  integrity sha512-kyi+SN9rAaBIC0CAa5ubnDQzie7WkiszR2IjZGefXDAaoNf1aVUvyApnAG7JafbPcDAbABf4grAhjRez8bK7uA==
   dependencies:
-    "@klayr/passphrase" "^4.0.1-alpha.0"
+    "@klayr/passphrase" "^4.0.1"
     buffer-reverse "1.0.1"
     hash-wasm "4.9.0"
     tweetnacl "1.0.3"
 
-"@klayr/p2p@^0.9.1-alpha.0":
-  version "0.9.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/p2p/-/p2p-0.9.1-alpha.0.tgz#6e6a48b22c2ab69698573f3719b95a380912f14d"
-  integrity sha512-4se8wCtP5VEmUMntbus9vMW2mQ9mbDM+1g4w2MSQ3MtYK90pBBXtgM1nFa/5O8IcHCi5oSKEA0yB5O4L9FTU5Q==
+"@klayr/p2p@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@klayr/p2p/-/p2p-0.9.1.tgz#681fe16c83b0ecb0d8484e54ad79368a0a8d851b"
+  integrity sha512-MSojJIpA4pPZcteWktzv/UZxRLfaUwdN8bUYX5nGVgi6erNp6l+Mi7319gw4OY8xYL7V+bSOx3aLxnavvc35zQ==
   dependencies:
-    "@klayr/codec" "^0.4.1-alpha.0"
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/validator" "^0.8.1-alpha.0"
+    "@klayr/codec" "^0.4.1"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/validator" "^0.8.1"
     lodash.shuffle "4.2.0"
     semver "7.5.2"
     socketcluster-client "14.3.1"
     socketcluster-server "14.6.0"
 
-"@klayr/passphrase@^4.0.1-alpha.0":
-  version "4.0.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/passphrase/-/passphrase-4.0.1-alpha.0.tgz#8ffb11cf43e205d09ee93fe46a395f31092b9feb"
-  integrity sha512-Pm9yUixHAxN87RvJzuea4t5ZvrPbe8YBxo6+zBtLZVt1z8gB+6tRcrtAaKdEuWpLjfvbvUSqF0wweY8d0aiceQ==
+"@klayr/passphrase@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@klayr/passphrase/-/passphrase-4.0.1.tgz#22040beca1042b3a680563cb22721a3800420f16"
+  integrity sha512-pnLA5+0iQBEHqwpgmNVLVu5cTixH0TLwfBZ8TIEY3+6/IU2dRFIU1w4GSKxy4whZf+B0IAReE0wozIGVxs22GA==
   dependencies:
     bip39 "3.0.3"
 
-"@klayr/transaction-pool@^0.7.1-alpha.0":
-  version "0.7.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/transaction-pool/-/transaction-pool-0.7.1-alpha.0.tgz#ada8f8721a7cf80414f87e0f549de6403f2e4eed"
-  integrity sha512-a/hPshFm8TLRgtNWGihCsLnMRk36lbuooi8QAj1VxpO2MYMaUCq7U2/2qoTkiRa7UyEKxY+Myk5xBq3X7w6KhQ==
+"@klayr/transaction-pool@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@klayr/transaction-pool/-/transaction-pool-0.7.1.tgz#0ff1ff98d778c7bb7550837eeef37213ba85e24d"
+  integrity sha512-Jwci9P/6y0k6KkQi24GV2mKjrNLyD9SK+DnOp8tai4Iw4Q8XAgdjYeTd5IRr35NJcmG1s7XdoqFP5+4mJz6eFg==
   dependencies:
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/utils" "^0.4.1-alpha.0"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/utils" "^0.4.1"
     debug "4.3.4"
 
-"@klayr/transactions@^6.0.1-alpha.0":
-  version "6.0.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/transactions/-/transactions-6.0.1-alpha.0.tgz#3819751d00327b1e6f561bc553915a9b4b76f128"
-  integrity sha512-JCq2ZgzedAmJQA5Ir8KLjdATa/cswMRuOf1nZcZh2rX47YVq5iZctkyH1aEz7UHbJsLkEbGPg6UAeCp0KHTHUw==
+"@klayr/transactions@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@klayr/transactions/-/transactions-6.0.1.tgz#bdbc7de90e7628ec62502af735f38ab11130389b"
+  integrity sha512-foy+R2yNsNBCizSa6IAb5QhMhjMOZ9k8sqgzd2KIsd7KPyC3+0MI3qZ8jnXfd7tnBgZmGgq83ZoTSdbY2UuZjA==
   dependencies:
-    "@klayr/codec" "^0.4.1-alpha.0"
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/validator" "^0.8.1-alpha.0"
+    "@klayr/codec" "^0.4.1"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/validator" "^0.8.1"
 
-"@klayr/tree@^0.4.1-alpha.0":
-  version "0.4.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/tree/-/tree-0.4.1-alpha.0.tgz#10a3aa832c8b5b1d212c2c81a74cd161a5b9c531"
-  integrity sha512-LT+1iMkYcg/bYoS2MN6kXbwmE9mAMhSQ0y/4128QGK0F0PSB+mNYdhfIdYqT+X9rBITovYDAVSSBi5iEUvZv+w==
+"@klayr/tree@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@klayr/tree/-/tree-0.4.1.tgz#c79c214870dc38120b2578edfd30af9e5ba54171"
+  integrity sha512-pkE4M9adhhcdUSxaUUXNSWcKHDsBg/nl84SkYns55aDALVLS3fni10Hu010+YsOwSgqdPFDdp/sm7R5rLxJ6Zg==
   dependencies:
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/utils" "^0.4.1-alpha.0"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/utils" "^0.4.1"
 
-"@klayr/utils@^0.4.1-alpha.0":
-  version "0.4.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/utils/-/utils-0.4.1-alpha.0.tgz#a57668723c10cd9c12768dc67b672d02bd780f78"
-  integrity sha512-RP61Xt20As27zNNyIKhvxE/mY7RXsfQuhWyAt0LztxFx+3H/TJ2FM1/J7Z2UaX6dvYfGh9nC+lyCLS2Oj51J3Q==
+"@klayr/utils@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@klayr/utils/-/utils-0.4.1.tgz#ab29a4ccb8d10f5d4318ae94128f8deab86d9b8e"
+  integrity sha512-6DhmycIRZRMcTY670enGuWrTaR4mMDAdJB4outXCyf9imNg2xG4A+cI7CEIFjw8mjJoIs442B8htmrGJQHExEQ==
   dependencies:
     lodash.clonedeep "4.5.0"
 
-"@klayr/validator@^0.8.1-alpha.0":
-  version "0.8.1-alpha.0"
-  resolved "https://npm.klayr.dev/@klayr/validator/-/validator-0.8.1-alpha.0.tgz#2b246a66473bc7530ba14ba3f16483eb86bb4e16"
-  integrity sha512-9x5qpyifDeSFAwz913xTfV56jwjj/m1L9tHXW/L1HJh32374E9wLlxYgirxwzxXXOnE2/tSEWZe/sBq6vbbrSA==
+"@klayr/validator@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@klayr/validator/-/validator-0.8.1.tgz#4da89d2489d167c6c5bc63b2ff563d0a0601e815"
+  integrity sha512-QA2fIdsLEOlj41H+YIDNswVEL6Lvx6gz46DcfXARS8vQubn12lqhWX/yhjyNiYCjGQzz1hCAGW2rkHREg7AUsQ==
   dependencies:
-    "@klayr/cryptography" "^4.0.1-alpha.0"
+    "@klayr/cryptography" "^4.0.1"
     ajv "8.1.0"
     ajv-formats "2.1.1"
     debug "4.3.4"
     semver "7.5.2"
     validator "13.7.0"
 
-"@liskhq/lisk-api-client@6.1.0", "@liskhq/lisk-api-client@^6.1.0":
+"@liskhq/lisk-api-client@6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@liskhq/lisk-api-client/-/lisk-api-client-6.1.0.tgz#816dbdf801db028cf23a5639ae8bc6e77f02b0a1"
   integrity sha512-+OYDsrpt3VPM/Vs/nhzfyq7Tw4DRLAjJ6ymXdnfvecz31WniJCfbxIqTn+LD9U0qqPISvj5bF399USXKldRkLg==
@@ -764,7 +764,20 @@
     ws "8.11.0"
     zeromq "6.0.0-beta.6"
 
-"@liskhq/lisk-chain@0.5.1":
+"@liskhq/lisk-api-client@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-api-client/-/lisk-api-client-6.0.2.tgz#0fd43b1f6f56725a461c3cb261dbcfa801bef07b"
+  integrity sha512-+i1z1iMCp4h7Uyg1T5Y6KZYnGkuRidCxNmRCaMGlc5V7yTk9eog2D+gVmnTQY+81vz+7GymvodgSJdFviHAxnQ==
+  dependencies:
+    "@liskhq/lisk-codec" "^0.4.0"
+    "@liskhq/lisk-cryptography" "^4.0.0"
+    "@liskhq/lisk-transactions" "^6.0.0"
+    "@liskhq/lisk-validator" "^0.8.0"
+    isomorphic-ws "4.0.1"
+    ws "8.11.0"
+    zeromq "6.0.0-beta.6"
+
+"@liskhq/lisk-chain@0.5.1", "@liskhq/lisk-chain@^0.5.1":
   version "0.5.1"
   resolved "https://npm.klayr.dev/@liskhq/lisk-chain/-/lisk-chain-0.5.1.tgz#29fc1ff3c03388e6465bb78043869763aa9b868a"
   integrity sha512-LLf77czAY0SxJOHoQUio2r4fp5BxmfqZTBlhEt9Oy1jmVB3+XR8HSczCcGi0B09owiKYWXbZpYw3Q4R/ic4N0g==
@@ -775,19 +788,6 @@
     "@liskhq/lisk-tree" "^0.4.0"
     "@liskhq/lisk-utils" "^0.4.0"
     "@liskhq/lisk-validator" "^0.8.0"
-    debug "4.3.4"
-
-"@liskhq/lisk-chain@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-chain/-/lisk-chain-0.6.0.tgz#1d8bf58d250f227e1647b56de9d27228214f00c9"
-  integrity sha512-QbNNDZiNerj2Vrb+Fn0HbbtkwUS9FBhlTuJC3fO6X5uwlPaEhMmgU5p62a02TimKrNmWm8W3pjVfxs7xCfCW5g==
-  dependencies:
-    "@liskhq/lisk-codec" "^0.5.0"
-    "@liskhq/lisk-cryptography" "^4.1.0"
-    "@liskhq/lisk-db" "0.3.7"
-    "@liskhq/lisk-tree" "^0.5.0"
-    "@liskhq/lisk-utils" "^0.4.0"
-    "@liskhq/lisk-validator" "^0.9.0"
     debug "4.3.4"
 
 "@liskhq/lisk-codec@0.5.0", "@liskhq/lisk-codec@^0.5.0":
@@ -828,24 +828,14 @@
     cargo-cp-artifact "^0.1"
     shelljs "^0.8.5"
 
-"@liskhq/lisk-db@0.3.7":
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-db/-/lisk-db-0.3.7.tgz#9dce3d0c37f248f9221b26f0d57c3306d7d072ef"
-  integrity sha512-n0/i3lea8ApTaSX99mhEJr3IZgG5l65M8Bmoo3D4ytbzyTySY9q7ITqj0y3kEZd997g4IUJl0x6Slq2RgFeucA==
+"@liskhq/lisk-p2p@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-p2p/-/lisk-p2p-0.9.0.tgz#50bce840706dce8caafe3bee963700598dffa004"
+  integrity sha512-nXfUB3ExixvGgkgMudklArPqo9ZsHS/v5pJoxNPEhx/nTXOBxPFT0KOCtVuqNRHg+fNd/UJEQKK3/UwW0wcc5Q==
   dependencies:
-    "@mapbox/node-pre-gyp" "^1.0.9"
-    "@types/node" "^16 || ^18"
-    cargo-cp-artifact "^0.1"
-    shelljs "^0.8.5"
-
-"@liskhq/lisk-p2p@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-p2p/-/lisk-p2p-0.10.0.tgz#664f3732642b58ca86e3aa8d5eaab868f3b73f68"
-  integrity sha512-FPZ0bcIrQ4ZdHSPbm4xzyptZbiDIGmCrCj89mqy6xdZ7f/RrHITMZRx99Zem/RiwCOqGlvk7M98VcQYTRtOwvA==
-  dependencies:
-    "@liskhq/lisk-codec" "^0.5.0"
-    "@liskhq/lisk-cryptography" "^4.1.0"
-    "@liskhq/lisk-validator" "^0.9.0"
+    "@liskhq/lisk-codec" "^0.4.0"
+    "@liskhq/lisk-cryptography" "^4.0.0"
+    "@liskhq/lisk-validator" "^0.8.0"
     lodash.shuffle "4.2.0"
     semver "7.5.2"
     socketcluster-client "14.3.1"
@@ -858,16 +848,16 @@
   dependencies:
     bip39 "3.0.3"
 
-"@liskhq/lisk-transaction-pool@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-transaction-pool/-/lisk-transaction-pool-0.8.0.tgz#1c594a99dda3d8234ac5405c3ebd5f81161f2df2"
-  integrity sha512-6gNBpafcKNaJCHi79xZ8GVU7g3uASDp4oqUwocLF9lHOLNmSX9Ce5YkeWS95megd/OOE9F12Pn8r/gRBqoSoNg==
+"@liskhq/lisk-transaction-pool@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-transaction-pool/-/lisk-transaction-pool-0.7.0.tgz#e4ab7acdde54011bb971adf9c361105257c22ae0"
+  integrity sha512-BHymWO0WVQAt5tvEV7FwDWnat0lbfsWlPc44qrD6O1vOhJtKxjyJFF7FX9yj//Tmzz56gfKandf0FOjBWDWtxg==
   dependencies:
-    "@liskhq/lisk-cryptography" "^4.1.0"
+    "@liskhq/lisk-cryptography" "^4.0.0"
     "@liskhq/lisk-utils" "^0.4.0"
     debug "4.3.4"
 
-"@liskhq/lisk-transactions@^6.1.0":
+"@liskhq/lisk-transactions@^6.0.0", "@liskhq/lisk-transactions@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@liskhq/lisk-transactions/-/lisk-transactions-6.1.0.tgz#4225151b11fb1c1c272d8d01566f3ef45470d450"
   integrity sha512-v3DS2O7mSDHMqRRI8ilgFaizjH9zZ/PDBdiMviAzJ16ZPCqqYJ7Dwm6Blp7fAOPCgLwRJTVwLNCgeFiMYjo6Kg==
@@ -882,14 +872,6 @@
   integrity sha512-Gl4NrFMjF5uEo1jnK5i7GLwxChXC6BoRk80lDConU2Xjrm0hBwyiriEnBxXau4NfGHHfYPUbfZxD6OEJ9Wtl/A==
   dependencies:
     "@liskhq/lisk-cryptography" "^4.0.0"
-    "@liskhq/lisk-utils" "^0.4.0"
-
-"@liskhq/lisk-tree@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-tree/-/lisk-tree-0.5.0.tgz#45e9ada64606125b37533e5c5ea8276052a3c2e2"
-  integrity sha512-Uw9Y3vdtKdvAPDwVJ2i6Jq2XjHQURyPRyJVi7ZY+1NyFVtGKBEPQ5BW7zxCfS9XerxzTvLNdJYDTk5i5e0Mtkg==
-  dependencies:
-    "@liskhq/lisk-cryptography" "^4.1.0"
     "@liskhq/lisk-utils" "^0.4.0"
 
 "@liskhq/lisk-utils@0.4.0", "@liskhq/lisk-utils@^0.4.0":
@@ -4883,22 +4865,22 @@ keyv@^4.5.3:
   dependencies:
     json-buffer "3.0.1"
 
-klayr-framework@0.11.2-alpha.0:
-  version "0.11.2-alpha.0"
-  resolved "https://npm.klayr.dev/klayr-framework/-/klayr-framework-0.11.2-alpha.0.tgz#bace13cf9b97c9be3abe250435d6f0b6fb74172d"
-  integrity sha512-AnMWU9LqXuKy9XE/IXrMVRwrcJzJ12xoZ5eBeEcn2AGR47UVQMKvt/Sd596E0rT1YO2yMCZgr+A0Mqe4Nj2YQg==
+klayr-framework@0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/klayr-framework/-/klayr-framework-0.11.2.tgz#1c2a04aa33094aea32c02a4a4f2e2d0d179ec4e5"
+  integrity sha512-jrnCOqlh7otLoV6cZRxOnY7tvfhgSZrB8yP+tkp1L948ncFCcMjvFWxHbszEzli4b4xgi2dhTFM+1DadRRybyA==
   dependencies:
     "@chainsafe/blst" "0.2.9"
-    "@klayr/api-client" "^6.0.2-alpha.0"
-    "@klayr/chain" "^0.5.1-alpha.0"
-    "@klayr/codec" "^0.4.1-alpha.0"
-    "@klayr/cryptography" "^4.0.1-alpha.0"
-    "@klayr/p2p" "^0.9.1-alpha.0"
-    "@klayr/transaction-pool" "^0.7.1-alpha.0"
-    "@klayr/transactions" "^6.0.1-alpha.0"
-    "@klayr/tree" "^0.4.1-alpha.0"
-    "@klayr/utils" "^0.4.1-alpha.0"
-    "@klayr/validator" "^0.8.1-alpha.0"
+    "@klayr/api-client" "^6.0.2"
+    "@klayr/chain" "^0.5.1"
+    "@klayr/codec" "^0.4.1"
+    "@klayr/cryptography" "^4.0.1"
+    "@klayr/p2p" "^0.9.1"
+    "@klayr/transaction-pool" "^0.7.1"
+    "@klayr/transactions" "^6.0.1"
+    "@klayr/tree" "^0.4.1"
+    "@klayr/utils" "^0.4.1"
+    "@klayr/validator" "^0.8.1"
     "@liskhq/lisk-db" "0.3.10"
     bunyan "1.8.15"
     debug "4.3.4"
@@ -4959,23 +4941,23 @@ lint-staged@10.2.11:
     string-argv "0.3.1"
     stringify-object "^3.3.0"
 
-lisk-framework@0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/lisk-framework/-/lisk-framework-0.12.0.tgz#82a3187cc23073b3b776b6e7ec4937cc71e423fd"
-  integrity sha512-PJn+fBMkhq7pGkdRQtlTgLL+j4qsjWokOOGDraSE4T4PT84jmdNi+xPz+CKO6uw3eFBid8DhElROYiKHhQy6WA==
+lisk-framework@0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/lisk-framework/-/lisk-framework-0.11.2.tgz#109e3a8846e3c194a61c299814425ca936feb361"
+  integrity sha512-M6xPJ3Ehl7jc+vTKeXaPn+46A/CIPZtxBDbMGOTCqKhCGYYJp3tqPBJMuqzFcXOvKB03TER9cy3w/wU5vXs3NQ==
   dependencies:
     "@chainsafe/blst" "0.2.9"
-    "@liskhq/lisk-api-client" "^6.1.0"
-    "@liskhq/lisk-chain" "^0.6.0"
-    "@liskhq/lisk-codec" "^0.5.0"
-    "@liskhq/lisk-cryptography" "^4.1.0"
-    "@liskhq/lisk-db" "0.3.7"
-    "@liskhq/lisk-p2p" "^0.10.0"
-    "@liskhq/lisk-transaction-pool" "^0.8.0"
-    "@liskhq/lisk-transactions" "^6.1.0"
-    "@liskhq/lisk-tree" "^0.5.0"
+    "@liskhq/lisk-api-client" "^6.0.2"
+    "@liskhq/lisk-chain" "^0.5.1"
+    "@liskhq/lisk-codec" "^0.4.0"
+    "@liskhq/lisk-cryptography" "^4.0.0"
+    "@liskhq/lisk-db" "0.3.10"
+    "@liskhq/lisk-p2p" "^0.9.0"
+    "@liskhq/lisk-transaction-pool" "^0.7.0"
+    "@liskhq/lisk-transactions" "^6.0.0"
+    "@liskhq/lisk-tree" "^0.4.0"
     "@liskhq/lisk-utils" "^0.4.0"
-    "@liskhq/lisk-validator" "^0.9.0"
+    "@liskhq/lisk-validator" "^0.8.0"
     bunyan "1.8.15"
     debug "4.3.4"
     eventemitter2 "6.4.9"

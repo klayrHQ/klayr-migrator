@@ -246,6 +246,7 @@ export const LEGACY_DB_PATH = `${DEFAULT_LISK_CORE_PATH}/${DEFAULT_DATA_DIR}/leg
 
 export const DEFAULT_VERSION = '0.1.0';
 export const EVENT_NEW_BLOCK = 'app:block:new';
+export const BLOCK_TIME = 5;
 
 export const FILE_NAME = {
 	COMMANDS_TO_EXEC: 'commandsToExecute.txt',

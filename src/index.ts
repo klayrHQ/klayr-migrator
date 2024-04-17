@@ -54,7 +54,7 @@ import {
 } from './utils';
 import { captureForgingStatusAtSnapshotHeight } from './events';
 import { CreateAsset } from './createAsset';
-import { ApplicationConfigV4, NetworkConfigLocal } from './types';
+import { NetworkConfigLocal } from './types';
 import {
 	startKlayrCore,
 	isLiskCoreV4Running,
@@ -300,7 +300,7 @@ class KlayrMigrator extends Command {
 
 			if (autoMigrateUserConfig && !useSnapshot) {
 				// User specified custom config file
-				const configV4: ApplicationConfigV4 = customConfigPath
+				const configV4: ApplicationConfig = customConfigPath
 					? await getConfig(this, liskCoreV4DataPath, customConfigPath)
 					: await getConfig(this, liskCoreV4DataPath);
 

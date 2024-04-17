@@ -2,7 +2,10 @@
 	"system": {
 		"dataPath": "~/.klayr",
 		"logLevel": "info",
-		"keepEventsForHeights": 300
+		"keepEventsForHeights": 300,
+		"keepInclusionProofsForHeights": 300,
+		"inclusionProofKeys": [],
+		"enableMetrics": false
 	},
 	"rpc": {
 		"modes": ["ipc", "ws"],
@@ -20,26 +23,26 @@
 		"minimumCertifyHeight": 20520176
 	},
 	"network": {
-		"version": "5.0",
+		"version": "5.1",
 		"seedPeers": [
 			{
-				"ip": "testnet-seed-01.lisk.com",
+				"ip": "testnet-seed-01.klayr.xyz",
 				"port": 7667
 			},
 			{
-				"ip": "testnet-seed-02.lisk-nodes.net",
+				"ip": "testnet-seed-02.klayr.net",
 				"port": 7667
 			},
 			{
-				"ip": "testnet-seed-03.lisk.com",
+				"ip": "testnet-seed-03.klayr.one",
 				"port": 7667
 			},
 			{
-				"ip": "testnet-seed-04.lisk-nodes.net",
+				"ip": "testnet-seed-04.klayr.dev",
 				"port": 7667
 			},
 			{
-				"ip": "testnet-seed-05.lisk.com",
+				"ip": "testnet-seed-05.klayr.network",
 				"port": 7667
 			}
 		],

@@ -14,82 +14,12 @@
 import { Schema } from '@liskhq/lisk-codec';
 import { StakeSharingCoefficient } from 'klayr-framework/dist-node/modules/pos/types';
 
-interface RPCConfig {
-	enable: boolean;
-	mode: 'ipc' | 'ws';
-	port: number;
-}
-
 export type KeyIndex = Record<string, number>;
-
-export interface NetworkConfig {
-	advertiseAddress: boolean;
-	wsMaxPayload: number;
-	maxInboundConnections: number;
-	maxOutboundConnections: number;
-	hostIp: string;
-	port: number;
-	seedPeers: { ip: string; port: number }[];
-}
-
-export interface GenesisConfig {
-	[key: string]: unknown;
-	bftThreshold: number;
-	communityIdentifier: string;
-	blockTime: number;
-	maxPayloadLength: number;
-	rewards: {
-		milestones: string[];
-		offset: number;
-		distance: number;
-	};
-	minFeePerByte: number;
-	baseFees: {
-		moduleID: number;
-		assetID: number;
-		baseFee: string;
-	}[];
-}
-
-export interface PluginOptions extends Record<string, unknown> {
-	readonly loadAsChildProcess?: boolean;
-	readonly alias?: string;
-}
 
 export interface LoggerConfig {
 	logFileName: string;
 	fileLogLevel: string;
 	consoleLogLevel: string;
-}
-
-export interface TransactionPool {
-	readonly maxTransactions?: number;
-	readonly maxTransactionsPerAccount?: number;
-	readonly transactionExpiryTime?: number;
-	readonly minEntranceFeePriority?: string;
-	readonly minReplacementFeeDifference?: string;
-}
-
-export interface Backup {
-	height: number;
-}
-export interface ApplicationConfigV4 {
-	label: string;
-	version: string;
-	networkVersion: string;
-	rootPath: string;
-	forging: Record<string, unknown>;
-	network: NetworkConfig;
-	logger: LoggerConfig;
-	genesisConfig: GenesisConfig;
-	plugins: {
-		[key: string]: PluginOptions;
-	};
-	transactionPool: TransactionPool;
-	rpc: RPCConfig;
-	system: {
-		backup: Backup;
-	};
 }
 
 export interface AuthAccountEntry {

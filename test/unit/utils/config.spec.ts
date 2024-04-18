@@ -122,8 +122,8 @@ describe('Test networkIdentifier method', () => {
 
 describe('Test resolveConfigDefaultPath method', () => {
 	it('should resolve config filePath when called', async () => {
-		const expectedConfigPath = resolve(DEFAULT_LISK_CONFIG_PATH);
-		const configPath = await resolveConfigDefaultPath();
+		const expectedConfigPath = resolve(DEFAULT_LISK_CONFIG_PATH, 'testnet', 'config.json');
+		const configPath = await resolveConfigDefaultPath('testnet');
 		expect(configPath).toBe(expectedConfigPath);
 	});
 });

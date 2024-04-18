@@ -31,8 +31,8 @@ import {
 	DEFAULT_PORT_RPC,
 	ERROR_CODE,
 	LEGACY_DB_PATH,
-	SNAPSHOT_DIR,
 	LISK_V4_BACKUP_DATA_DIR,
+	DEFAULT_DATA_DIR,
 } from '../constants';
 import { MigratorException } from './exception';
 
@@ -86,7 +86,7 @@ const copyLegacyDB = async (_this: Command) => {
 	try {
 		_this.log(`Copying the Lisk Core v4.x snapshot to legacy.db at ${LEGACY_DB_PATH}`);
 		await copyDir(
-			path.resolve(LISK_V4_BACKUP_DATA_DIR, SNAPSHOT_DIR),
+			path.resolve(LISK_V4_BACKUP_DATA_DIR, DEFAULT_DATA_DIR),
 			resolveAbsolutePath(LEGACY_DB_PATH),
 		);
 		_this.log(`Legacy database for Klayr Core v4 has been created at ${LEGACY_DB_PATH}`);

@@ -28,7 +28,7 @@ The following dependencies need to be installed in order to run applications cre
 
 ### System requirements
 
-The following system requirements are recommended to run Klayr Migrator v2.0.8:
+The following system requirements are recommended to run Klayr Migrator v2.0.9:
 
 #### Memory
 
@@ -40,7 +40,7 @@ The following system requirements are recommended to run Klayr Migrator v2.0.8:
 
 ## Setup
 
-Follow our Klayr Documentation guide for [setting up the Klayr migrator](https://klayr.xyz/documentation/klayr-core/v4/management/migration.html#setting-up-the-klayr-migrator).
+Follow our Klayr Documentation guide for [setting up the Klayr migrator](https://klayr.xyz/documentation/klayr-core/management/migration.html#setting-up-the-klayr-migrator).
 
 ### Build Distributions (Linux, Darwin) from source
 
@@ -81,7 +81,7 @@ $ npm install -g klayr-migrator
 $ lisk-migrator COMMAND
 running command...
 $ klayr-migrator (-v|--version|version)
-klayr-migrator/2.0.8 darwin-arm64 node-v18.20.1
+klayr-migrator/2.0.9 darwin-arm64 node-v18.20.1
 $ klayr-migrator --help [COMMAND]
 USAGE
   $ klayr-migrator COMMAND
@@ -108,18 +108,17 @@ Klayr Migrator has an extensive set of unit tests. To run the tests, please inst
 $ npm test
 ```
 
-## Migrating from Lisk Core v4.0.1 to Klayr core v4.1.0
+## Migrating from Lisk Core v4.0.x to Klayr core v4.0.x
 
-The [migration guide](./docs/migration.md) explains the transition process from Lisk Core v4.0.1 (or later) to Klayr Core v4.1.0 using Klayr Migrator v3.
+The [migration guide](./docs/migration.md) explains the transition process from Lisk Core v4.0.1 (or later) to Klayr Core v4.0.x using Klayr Migrator v3.
 
 ## Get Involved
 
-| Reason                          | How                                                                                            |
-| ------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Want to chat with our community | [Reach them on Discord](http://klayr.chat)                                                     |
-| Found a bug                     | [Open a new issue](https://github.com/klayrhq/klayr-migrator/issues/new)                       |
-| Found a security issue          | [See our bounty program](https://blog.lisk.io/announcing-lisk-bug-bounty-program-5895bdd46ed4) |
-| Want to develop with us         | [Create a fork](https://github.com/klayrhq/klayr-migrator/fork)                                |
+| Reason                          | How                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| Want to chat with our community | [Reach them on Discord](http://klayr.chat)                               |
+| Found a bug                     | [Open a new issue](https://github.com/klayrhq/klayr-migrator/issues/new) |
+| Want to develop with us         | [Create a fork](https://github.com/klayrhq/klayr-migrator/fork)          |
 
 ## License
 

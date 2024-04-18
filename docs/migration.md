@@ -1,8 +1,8 @@
 # Migration Guide
 
-This section explains how to migrate a Lisk Core v4.0.x node to Klayr Core v4.1.0 using the Klayr Migrator.
+This section explains how to migrate a Lisk Core v4.0.x node to Klayr Core v4.0.x using the Klayr Migrator.
 
-The Klayr Migrator CLI tool will generate a new genesis (snapshot) block for Klayr Core v4.1.0.
+The Klayr Migrator CLI tool will generate a new genesis (snapshot) block for Klayr Core v4.0.x.
 The new genesis block is created based on a snapshot of the existing blockchain (running on Lisk Core v4.0.x) at a pre-determined height.
 
 Klayr Migrator automatically exports the node's Forging Status information to the file named `forgingStatus.json` under the output directory.
@@ -28,7 +28,7 @@ The migrator setup can be performed by following the steps defined in the `SETUP
 Download the checksum and verify the successful download of klayr-migrator.
 
 ```
-curl -O https://klayr.download/klayr-migrator/klayr-migrator-v2.0.2.tar.gz.SHA256
+curl -O https://klayr.download/klayr-migrator/klayr-migrator-v2.0.9.tar.gz.SHA256
 ```
 
 ### Verify checksum
@@ -36,15 +36,15 @@ curl -O https://klayr.download/klayr-migrator/klayr-migrator-v2.0.2.tar.gz.SHA25
 **Linux**
 
 ```
-sha256sum -c klayr-migrator-v2.0.2.tar.gz.SHA256
-klayr-migrator-v2.0.2.tar.gz: OK
+sha256sum -c klayr-migrator-v2.0.9.tar.gz.SHA256
+klayr-migrator-v2.0.9.tar.gz: OK
 ```
 
 **MacOS**
 
 ```
-shasum -a 256 -c klayr-migrator-v2.0.2.tar.gz.SHA256
-klayr-migrator-v2.0.2.tar.gz: OK
+shasum -a 256 -c klayr-migrator-v2.0.9.tar.gz.SHA256
+klayr-migrator-v2.0.9.tar.gz: OK
 ```
 
 > Note: Please ensure that the file name and the checksum filename are the same, where the checksum file has an additional extension (klayr-migrator-v2.0.2.tar.gz, and will have a checksum file by the name of klayr-migrator-v2.0.2.tar.gz.SHA256), which are present in the same directory.
@@ -80,7 +80,7 @@ $ klayr-migrator [-d <value>] [-m <value>] [-c <value>] [-o <value>] [-p <value>
 
 OPTIONS
   -c, --config=config                                  Custom configuration file path for Lisk Core v4.0.x.
-  -d, --lisk-core-v4-data-path=lisk-core-v4-data-path  Path where the Lisk Core v4.x instance is running. When not supplied, defaults to the default data directory for Lisk Core.
+  -d, --lisk-core-data-path=lisk-core-data-path  Path where the Lisk Core v4.x instance is running. When not supplied, defaults to the default data directory for Lisk Core.
   -h, --help                                           show CLI help
   -n, --network=(mainnet|testnet)                      Network to be considered for the migration. Depends on the '--snapshot-path' flag.
 
@@ -129,7 +129,7 @@ lisk-migrator --snapshot-height [recommendedSnapshotHeight] --output ~/.klayr/kl
   The snapshot height will be announced separately.
 - `--output`:
   The absolute path to the directory, where the newly generated genesis block should be saved.
-- `--lisk-core-v4-data-path`:
+- `--lisk-core-data-path`:
   The absolute path to the directory, where the Lisk Core v3.x node is located.
 - `--auto-migrate-config`:
   Migrate Lisk Core v3.x configuration to v4.x automatically.
@@ -141,13 +141,13 @@ Alternatively, the genesis block and configuration for Klayr Core v4.x migration
 **Mainnet**
 
 ```
-klayr-migrator --snapshot-height [recommendedSnapshotHeight] --output ~/.klayr/klayr-core/config/mainnet --lisk-core-v4-data-path ~/lisk-main --auto-migrate-config
+klayr-migrator --snapshot-height [recommendedSnapshotHeight] --output ~/.klayr/klayr-core/config/mainnet --lisk-core-data-path ~/lisk-main --auto-migrate-config
 ```
 
 **Testnet**
 
 ```
-klayr-migrator --snapshot-height [recommendedSnapshotHeight] --output ~/.klayr/klayr-core/config/testnet --lisk-core-v4-data-path ~/lisk-test --auto-migrate-config
+klayr-migrator --snapshot-height [recommendedSnapshotHeight] --output ~/.klayr/klayr-core/config/testnet --lisk-core-data-path ~/lisk-test --auto-migrate-config
 ```
 
 In case `--auto-start-klayr-core-v4` is disabled, please install & start Klayr Core v4.x manually.

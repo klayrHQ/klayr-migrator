@@ -18,7 +18,7 @@ import Command from '@oclif/command';
 import { log, error } from 'console';
 
 import { configV3, configV4 } from '../fixtures/config';
-import { DEFAULT_LISK_CONFIG_PATH, NETWORK_CONSTANT } from '../../../src/constants';
+import { NETWORK_CONSTANT } from '../../../src/constants';
 import {
 	getNetworkByNetworkID,
 	getLogLevel,
@@ -122,7 +122,7 @@ describe('Test networkIdentifier method', () => {
 
 describe('Test resolveConfigDefaultPath method', () => {
 	it('should resolve config filePath when called', async () => {
-		const expectedConfigPath = resolve(DEFAULT_LISK_CONFIG_PATH, 'testnet', 'config.json');
+		const expectedConfigPath = resolve('..', 'klayr-migrator', 'config', 'testnet', 'config.json');
 		const configPath = await resolveConfigDefaultPath('testnet');
 		expect(configPath).toBe(expectedConfigPath);
 	});

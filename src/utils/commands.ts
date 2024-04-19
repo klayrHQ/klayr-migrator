@@ -32,11 +32,10 @@ export const getCommandsToExecPostMigration = async (
 		const forgingStatusJson = JSON.parse(forgingStatusString);
 
 		const chainID = parseInt(networkConstant.tokenID.substring(0, 2), 16);
-		// todo update lskAddress
 		for (const forgingStatus of forgingStatusJson) {
 			commandsToExecute.push(
 				'\n',
-				`## Generate/Register the BLS keys for validator ${forgingStatus.lskAddress} - Please modify the command if necessary`,
+				`## Generate/Register the BLS keys for validator ${forgingStatus.address} - Please modify the command if necessary`,
 				'\n',
 			);
 
@@ -44,14 +43,13 @@ export const getCommandsToExecPostMigration = async (
 			commandsToExecute.push(
 				`klayr-core keys:create --chainid ${chainID} --output ${keysFilepath} --add-legacy`,
 				`klayr-core keys:import --file-path ${keysFilepath}`,
-				`klayr-core endpoint:invoke random_setHashOnion '{ "address":"${forgingStatus.lskAddress}"}'`,
+				`klayr-core endpoint:invoke random_setHashOnion '{ "address":"${forgingStatus.address}"}'`,
 				`klayr-core endpoint:invoke generator_setStatus '{ "address":"${
-					forgingStatus.lskAddress
+					forgingStatus.address
 				}", "height": ${forgingStatus.height ?? snapshotHeight}, "maxHeightGenerated":  ${
-					forgingStatus.maxHeightPreviouslyForged ?? snapshotHeight
+					forgingStatus.maxHeightGenerated ?? snapshotHeight
 				}, "maxHeightPrevoted":  ${forgingStatus.maxHeightPrevoted ?? snapshotHeight} }' --pretty`,
-				`klayr-core generator:enable ${forgingStatus.lskAddress} --use-status-value`,
-				'klayr-core transaction:create legacy registerKeys 400000 --key-derivation-path=legacy --send',
+				`klayr-core generator:enable ${forgingStatus.address} --use-status-value`,
 			);
 
 			commandsToExecute.push('\n', '-----------------------------------------------------', '\n');

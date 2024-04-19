@@ -288,13 +288,12 @@ export const SNAPSHOT_DIR = `${DEFAULT_DATA_DIR}/backup`;
 export const BACKUP_DIR = 'backup';
 export const MIN_SUPPORTED_LISK_CORE_VERSION = '4.0.1';
 export const DEFAULT_LISK_CORE_PATH = `${homedir()}/.lisk/lisk-core`;
-export const DEFAULT_LISK_CONFIG_PATH = `${homedir()}/klayr-migrator/config`;
 export const DEFAULT_KLAYR_CORE_PATH = `${homedir()}/.klayr/klayr-core`;
 export const LEGACY_DB_PATH = `${DEFAULT_KLAYR_CORE_PATH}/${DEFAULT_DATA_DIR}/legacy.db`;
 
 export const DEFAULT_VERSION = '0.1.0';
-export const EVENT_NEW_BLOCK = 'app:block:new';
-export const BLOCK_TIME = 5;
+export const EVENT_NEW_BLOCK = 'chain_newBlock';
+export const BLOCK_TIME = 7;
 
 export const FILE_NAME = {
 	COMMANDS_TO_EXEC: 'commandsToExecute.txt',

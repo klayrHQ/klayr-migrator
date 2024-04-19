@@ -24,7 +24,6 @@ import { objects } from '@liskhq/lisk-utils';
 import { LoggerConfig } from '../types';
 import {
 	BLOCK_TIME,
-	DEFAULT_LISK_CONFIG_PATH,
 	DEFAULT_VERSION,
 	MAX_BFT_WEIGHT_CAP,
 	NETWORK_CONSTANT,
@@ -90,7 +89,7 @@ export const getConfig = async (
 };
 
 export const resolveConfigDefaultPath = async (networkName: string): Promise<string> =>
-	resolve(DEFAULT_LISK_CONFIG_PATH, networkName, 'config.json');
+	resolve(__dirname, '../../config', networkName, 'config.json');
 
 export const createBackup = async (config: ApplicationConfig): Promise<void> => {
 	const backupPath = join(__dirname, '../..', 'backup');

@@ -263,11 +263,10 @@ export interface NetworkConfigLocal {
 
 export interface ForgingStatus {
 	readonly address: string;
-	lskAddress?: string;
-	readonly forging: boolean;
-	readonly height?: number;
-	readonly maxHeightPrevoted?: number;
-	readonly maxHeightPreviouslyForged?: number;
+	readonly enabled: boolean;
+	readonly height: number;
+	readonly maxHeightPrevoted: number;
+	readonly maxHeightGenerated: number;
 }
 
 export interface FileInfo {

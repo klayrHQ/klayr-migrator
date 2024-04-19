@@ -14,6 +14,7 @@
 import { resolve } from 'path';
 import { Command } from '@oclif/command';
 import { APIClient } from '@liskhq/lisk-api-client';
+import { BlockHeader } from '@liskhq/lisk-chain';
 import { write } from './utils/fs';
 import { EVENT_NEW_BLOCK, FILE_NAME } from './constants';
 import { ForgingStatus } from './types';
@@ -25,21 +26,22 @@ export const captureForgingStatusAtSnapshotHeight = (
 	outputDir: string,
 ) => {
 	client.subscribe(EVENT_NEW_BLOCK, async data => {
-		const { block: encodedBlock } = (data as unknown) as Record<string, string>;
-		const newBlock = client.block.decode(Buffer.from(encodedBlock, 'hex'));
-
-		if (newBlock.header.height === snapshotHeight) {
-			const finalForgingStatuses: ForgingStatus[] = await client.invoke('generator:status');
-
-			if (finalForgingStatuses.length) {
+		const { blockHeader } = (data as unknown) as { blockHeader: BlockHeader };
+		if (blockHeader.height === snapshotHeight) {
+			const { status }: { status: ForgingStatus[] } = await client.invoke('generator_getStatus');
+			if (status.length) {
+				const klayrStatus = status.map(s => ({
+					...s,
+					address: `kly${s.address.slice(3)}`,
+				}));
 				try {
 					const forgingStatusJsonFilepath = resolve(outputDir, FILE_NAME.FORGING_STATUS);
-					await write(forgingStatusJsonFilepath, JSON.stringify(finalForgingStatuses, null, '\t'));
+					await write(forgingStatusJsonFilepath, JSON.stringify(klayrStatus, null, '\t'));
 					_this.log(`\nFinished exporting forging status to ${forgingStatusJsonFilepath}.`);
 				} catch (error) {
 					_this.log(
 						`\nUnable to save the node Forging Status information to the disk, please find it below instead:\n${JSON.stringify(
-							finalForgingStatuses,
+							klayrStatus,
 							null,
 							2,
 						)}`,

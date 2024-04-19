@@ -17,7 +17,7 @@
 		"block": {
 			"fromFile": "./config/genesis_block.blob"
 		},
-		"blockTime": 5,
+		"blockTime": 7,
 		"chainID": "01000000",
 		"maxTransactionsSize": 15360,
 		"minimumCertifyHeight": 20520176

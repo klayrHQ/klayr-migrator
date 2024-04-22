@@ -20,7 +20,7 @@ import { FILE_NAME } from '../constants';
 import { NetworkConfigLocal } from '../types';
 
 export const getCommandsToExecPostMigration = async (
-	networkConstant: NetworkConfigLocal,
+	_networkConstant: NetworkConfigLocal,
 	snapshotHeight: number,
 	outputDir: string,
 ) => {
@@ -31,7 +31,6 @@ export const getCommandsToExecPostMigration = async (
 		const forgingStatusString = (await read(forgingStatusJsonFilepath)) as string;
 		const forgingStatusJson = JSON.parse(forgingStatusString);
 
-		const chainID = parseInt(networkConstant.tokenID.substring(0, 2), 16);
 		for (const forgingStatus of forgingStatusJson) {
 			commandsToExecute.push(
 				'\n',
@@ -39,10 +38,8 @@ export const getCommandsToExecPostMigration = async (
 				'\n',
 			);
 
-			const keysFilepath = resolve(outputDir, FILE_NAME.KEYS);
 			commandsToExecute.push(
-				`klayr-core keys:create --chainid ${chainID} --output ${keysFilepath} --add-legacy`,
-				`klayr-core keys:import --file-path ${keysFilepath}`,
+				'klayr-core keys:import --file-path {path_to/your_keys_file.json}',
 				`klayr-core endpoint:invoke random_setHashOnion '{ "address":"${forgingStatus.address}"}'`,
 				`klayr-core endpoint:invoke generator_setStatus '{ "address":"${
 					forgingStatus.address

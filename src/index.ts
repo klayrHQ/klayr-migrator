@@ -253,7 +253,7 @@ class KlayrMigrator extends Command {
 
 				if (semver.lt(appVersion, MIN_SUPPORTED_LISK_CORE_VERSION)) {
 					this.error(
-						`Lisk Migrator is not compatible with Lisk Core version ${appVersion}. Minimum supported version is ${MIN_SUPPORTED_LISK_CORE_VERSION}.`,
+						`Klayr Migrator is not compatible with Lisk Core version ${appVersion}. Minimum supported version is ${MIN_SUPPORTED_LISK_CORE_VERSION}.`,
 					);
 				}
 				cli.action.stop(`${appVersion} detected`);
@@ -381,7 +381,7 @@ class KlayrMigrator extends Command {
 
 						// Ask user to manually stop Lisk Core v3 and continue
 						const isLiskCoreV4Stopped = await cli.confirm(
-							"Please stop Lisk Core to continue. Type 'yes' and press Enter when ready. [yes/no]",
+							"Please stop Lisk Core to continue. Type 'yes' and press Enter when you stopped Lisk Core. [yes/no]",
 						);
 
 						if (isLiskCoreV4Stopped) {
@@ -417,7 +417,7 @@ class KlayrMigrator extends Command {
 							);
 
 							if (isUserConfirmed) {
-								cli.action.start('Starting Lisk Core v4');
+								cli.action.start('Starting Klayr Core');
 								const networkName = networkConstant.name;
 								await startKlayrCore(
 									this,

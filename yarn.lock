@@ -641,110 +641,110 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@klayr/api-client@^6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@klayr/api-client/-/api-client-6.0.2.tgz#f704b41168616b9a30a6f8720253324fd2e87856"
-  integrity sha512-zXFlm0RelZ6IVzOZ698Vkf5g0WWX3COIN7EloKh1yx0iIQmZ5t8QPUtp18KOP3sy6RdTzkxVen97cmyvUbat/Q==
+"@klayr/api-client@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@klayr/api-client/-/api-client-6.0.3.tgz#83bdc310a1800659bb4179ab7a584fbe0a5da061"
+  integrity sha512-IK6np9RpB4401dCsK5aBVLXxAAU1kMODkAjL+eKTcEbNaiPgjFAyE5VuuW+1C47+RYOBYU7hvyixLlOc9XkFLw==
   dependencies:
-    "@klayr/codec" "^0.4.1"
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/transactions" "^6.0.1"
-    "@klayr/validator" "^0.8.1"
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/transactions" "^6.0.2"
+    "@klayr/validator" "^0.8.2"
     isomorphic-ws "4.0.1"
     ws "8.11.0"
     zeromq "6.0.0-beta.6"
 
-"@klayr/chain@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@klayr/chain/-/chain-0.5.1.tgz#7cbaab34b71b1c7eefe61d99bc20d5b617869fed"
-  integrity sha512-MDlt7NpYRIYPRCb/PPyMZdE9rKN36UmW465C8oc7jb1C3H3hwMHWd/KhKDCUXjJdBzBESqgEwksrrNp//fClNg==
+"@klayr/chain@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@klayr/chain/-/chain-0.5.2.tgz#f158198702290da56ce3b6afae0e313f7f1da8da"
+  integrity sha512-RH3h/q6IqJsCm/Kaz2rwtS69nITeaPiQKqIED96cdzmddgOjnJr3KA5fA+fl+P1HJETS6Cc3jhuo1ggWEjoZTQ==
   dependencies:
-    "@klayr/codec" "^0.4.1"
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/tree" "^0.4.1"
-    "@klayr/utils" "^0.4.1"
-    "@klayr/validator" "^0.8.1"
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/tree" "^0.4.2"
+    "@klayr/utils" "^0.4.2"
+    "@klayr/validator" "^0.8.2"
     "@liskhq/lisk-db" "0.3.10"
     debug "4.3.4"
 
-"@klayr/codec@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@klayr/codec/-/codec-0.4.1.tgz#6c9f32233fdeb7e6cbb18cf7dd5c2e03b2b7425d"
-  integrity sha512-tcNAs3kKIcKrdoFwmg80S6BKm231lHQCkKeRV1ti0ukTf1y8aQtoVd2betnQAnHZdJ8nLwaEBhs6sD9Sgto6RA==
+"@klayr/codec@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@klayr/codec/-/codec-0.4.2.tgz#02793b20e25523b0b1871f184e8249d8ade119b8"
+  integrity sha512-dUPkhQT6B5CCCNIvgqKXqt0kheCIEmrfb5gd9sx52DcQaGjetfHQ5XJgBsbS+UDgZmK5FPKcpw2rpXdld0p1wg==
   dependencies:
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/utils" "^0.4.1"
-    "@klayr/validator" "^0.8.1"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/utils" "^0.4.2"
+    "@klayr/validator" "^0.8.2"
 
-"@klayr/cryptography@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@klayr/cryptography/-/cryptography-4.0.1.tgz#5cff3f6deca402991ba77dcc210dae81548df930"
-  integrity sha512-kyi+SN9rAaBIC0CAa5ubnDQzie7WkiszR2IjZGefXDAaoNf1aVUvyApnAG7JafbPcDAbABf4grAhjRez8bK7uA==
+"@klayr/cryptography@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@klayr/cryptography/-/cryptography-4.0.2.tgz#49237931227f6d9ceae8da69ea76823c0db62e9d"
+  integrity sha512-AwgATewCX5RO15NjiaOOfbZ1xZHxorlJ79BL2g7hOr/dcZg1kynmRwKOribxz/0XvGH7YgL2UYdJJxWfD6fpnA==
   dependencies:
-    "@klayr/passphrase" "^4.0.1"
+    "@klayr/passphrase" "^4.0.2"
     buffer-reverse "1.0.1"
     hash-wasm "4.9.0"
     tweetnacl "1.0.3"
 
-"@klayr/p2p@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@klayr/p2p/-/p2p-0.9.1.tgz#681fe16c83b0ecb0d8484e54ad79368a0a8d851b"
-  integrity sha512-MSojJIpA4pPZcteWktzv/UZxRLfaUwdN8bUYX5nGVgi6erNp6l+Mi7319gw4OY8xYL7V+bSOx3aLxnavvc35zQ==
+"@klayr/p2p@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@klayr/p2p/-/p2p-0.9.2.tgz#6fdca4294a9010336e770da0143ee0c443e96e85"
+  integrity sha512-9IYe8+V08+aDSDD7tG4i2bnUNY2q9/bEhyLa29baUd938bBsxKq/7x+hJBHTxL7vw41sYWjgDKfWmE9w6I0d4Q==
   dependencies:
-    "@klayr/codec" "^0.4.1"
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/validator" "^0.8.1"
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/validator" "^0.8.2"
     lodash.shuffle "4.2.0"
     semver "7.5.2"
     socketcluster-client "14.3.1"
     socketcluster-server "14.6.0"
 
-"@klayr/passphrase@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@klayr/passphrase/-/passphrase-4.0.1.tgz#22040beca1042b3a680563cb22721a3800420f16"
-  integrity sha512-pnLA5+0iQBEHqwpgmNVLVu5cTixH0TLwfBZ8TIEY3+6/IU2dRFIU1w4GSKxy4whZf+B0IAReE0wozIGVxs22GA==
+"@klayr/passphrase@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@klayr/passphrase/-/passphrase-4.0.2.tgz#b32765cea17d5b543ca2ff0ecb4f28ce054e1955"
+  integrity sha512-A+ajj7ns9EeOpVZtUKFYNlXr8A+BJvZVU9Zd6NSTG3uWpQU16+u1ahSVsSDcA73xESbLEHEYlEGBBDxv1h3l2g==
   dependencies:
     bip39 "3.0.3"
 
-"@klayr/transaction-pool@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@klayr/transaction-pool/-/transaction-pool-0.7.1.tgz#0ff1ff98d778c7bb7550837eeef37213ba85e24d"
-  integrity sha512-Jwci9P/6y0k6KkQi24GV2mKjrNLyD9SK+DnOp8tai4Iw4Q8XAgdjYeTd5IRr35NJcmG1s7XdoqFP5+4mJz6eFg==
+"@klayr/transaction-pool@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@klayr/transaction-pool/-/transaction-pool-0.7.2.tgz#bd0cac66d0779c7e3c7c1e11b589322104735c36"
+  integrity sha512-Ix5Whf1CTI5EEjS+EjqD7OQYA12f5Q5qanRDP163ztRDivgxJ3YiU+QmSwuUnFoG8bG3uYCAcAfuXeUzlohTFQ==
   dependencies:
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/utils" "^0.4.1"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/utils" "^0.4.2"
     debug "4.3.4"
 
-"@klayr/transactions@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@klayr/transactions/-/transactions-6.0.1.tgz#bdbc7de90e7628ec62502af735f38ab11130389b"
-  integrity sha512-foy+R2yNsNBCizSa6IAb5QhMhjMOZ9k8sqgzd2KIsd7KPyC3+0MI3qZ8jnXfd7tnBgZmGgq83ZoTSdbY2UuZjA==
+"@klayr/transactions@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@klayr/transactions/-/transactions-6.0.2.tgz#e33c3c8c540b01233112d730da12323efe8cac8b"
+  integrity sha512-1cbLz2pY6T0+d+bAFF7aKQmK1hjTSrxlQ0wuBmuOFcSUh1GvU1bldhgvTwY/fZVePlFCN5JXy4mOekT7fGQPXQ==
   dependencies:
-    "@klayr/codec" "^0.4.1"
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/validator" "^0.8.1"
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/validator" "^0.8.2"
 
-"@klayr/tree@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@klayr/tree/-/tree-0.4.1.tgz#c79c214870dc38120b2578edfd30af9e5ba54171"
-  integrity sha512-pkE4M9adhhcdUSxaUUXNSWcKHDsBg/nl84SkYns55aDALVLS3fni10Hu010+YsOwSgqdPFDdp/sm7R5rLxJ6Zg==
+"@klayr/tree@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@klayr/tree/-/tree-0.4.2.tgz#e6238419a4f48a9b2f229f5296c0f64acddab304"
+  integrity sha512-Uzdu6jVvvtUZKVsV11kFB7xWFhoyucRngpKEvNg/p+yHfsEYYRLkXib+eiyw60+IFMwUGfrEOv+6WYSA44li6g==
   dependencies:
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/utils" "^0.4.1"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/utils" "^0.4.2"
 
-"@klayr/utils@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@klayr/utils/-/utils-0.4.1.tgz#ab29a4ccb8d10f5d4318ae94128f8deab86d9b8e"
-  integrity sha512-6DhmycIRZRMcTY670enGuWrTaR4mMDAdJB4outXCyf9imNg2xG4A+cI7CEIFjw8mjJoIs442B8htmrGJQHExEQ==
+"@klayr/utils@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@klayr/utils/-/utils-0.4.2.tgz#44c9c18fb8549d420ec84b775ab0dfdc3d76e6dc"
+  integrity sha512-qEtBp813Ns8YeNq3QUIZk9HHHNHO6BPwlOzLUDkX1qHu77SWNFQgzSkOEOxoNQaY5CW+un0uBB3jH0K8L4U/3w==
   dependencies:
     lodash.clonedeep "4.5.0"
 
-"@klayr/validator@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@klayr/validator/-/validator-0.8.1.tgz#4da89d2489d167c6c5bc63b2ff563d0a0601e815"
-  integrity sha512-QA2fIdsLEOlj41H+YIDNswVEL6Lvx6gz46DcfXARS8vQubn12lqhWX/yhjyNiYCjGQzz1hCAGW2rkHREg7AUsQ==
+"@klayr/validator@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@klayr/validator/-/validator-0.8.2.tgz#091fcf0c50673b428f447a13d625792796d3287d"
+  integrity sha512-pbLwVfOH34sy/sk3wOwm9EQB+c5kQo/PCmWbwOnaVvk+WNVQm315irvQ8XOyY21QVlapE6hAG5hC9c/CzLsAsw==
   dependencies:
-    "@klayr/cryptography" "^4.0.1"
+    "@klayr/cryptography" "^4.0.2"
     ajv "8.1.0"
     ajv-formats "2.1.1"
     debug "4.3.4"
@@ -4865,22 +4865,22 @@ keyv@^4.5.3:
   dependencies:
     json-buffer "3.0.1"
 
-klayr-framework@0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/klayr-framework/-/klayr-framework-0.11.2.tgz#1c2a04aa33094aea32c02a4a4f2e2d0d179ec4e5"
-  integrity sha512-jrnCOqlh7otLoV6cZRxOnY7tvfhgSZrB8yP+tkp1L948ncFCcMjvFWxHbszEzli4b4xgi2dhTFM+1DadRRybyA==
+klayr-framework@0.11.4:
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/klayr-framework/-/klayr-framework-0.11.4.tgz#49ad8b1664363b791f6e94000424d8c68ebc0b63"
+  integrity sha512-VBIJJYCKlYhCzZILy5e3JwBlAesQti9urgWelkW0F6IHvAEshFMP4HMReLy7CmcB4W2WbfvtZX5KbERWdosKvw==
   dependencies:
     "@chainsafe/blst" "0.2.9"
-    "@klayr/api-client" "^6.0.2"
-    "@klayr/chain" "^0.5.1"
-    "@klayr/codec" "^0.4.1"
-    "@klayr/cryptography" "^4.0.1"
-    "@klayr/p2p" "^0.9.1"
-    "@klayr/transaction-pool" "^0.7.1"
-    "@klayr/transactions" "^6.0.1"
-    "@klayr/tree" "^0.4.1"
-    "@klayr/utils" "^0.4.1"
-    "@klayr/validator" "^0.8.1"
+    "@klayr/api-client" "^6.0.3"
+    "@klayr/chain" "^0.5.2"
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/p2p" "^0.9.2"
+    "@klayr/transaction-pool" "^0.7.2"
+    "@klayr/transactions" "^6.0.2"
+    "@klayr/tree" "^0.4.2"
+    "@klayr/utils" "^0.4.2"
+    "@klayr/validator" "^0.8.2"
     "@liskhq/lisk-db" "0.3.10"
     bunyan "1.8.15"
     debug "4.3.4"

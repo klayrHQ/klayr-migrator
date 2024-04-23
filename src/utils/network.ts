@@ -13,7 +13,7 @@
  */
 import { createServer } from 'net';
 
-import { NetworkConfigLocal, NodeInfo, Port } from '../types';
+import { NetworkConfigLocal, Port } from '../types';
 import { getAPIClient } from '../client';
 import { NETWORK_CONSTANT } from '../constants';
 
@@ -38,24 +38,24 @@ export const isPortAvailable = async (port: Port): Promise<boolean | Error> =>
 		server.listen(port);
 	});
 
-export const getNetworkIdentifier = async (
-	network: string,
-	liskCoreV3DataPath: string,
+export const getChainId = async (
+	network: string | null,
+	liskCoreV4DataPath: string,
 ): Promise<string> => {
-	const networkID = network
+	const chainID = network
 		? (() => {
 				const networkConstantEntry = Object.entries(NETWORK_CONSTANT).find(
 					([, v]) => v.name === network,
 				) as [string, NetworkConfigLocal];
 
-				const [networkIdentifier] = networkConstantEntry;
-				return networkIdentifier;
+				const [chainId] = networkConstantEntry;
+				return chainId;
 		  })()
 		: await (async () => {
-				const client = await getAPIClient(liskCoreV3DataPath);
-				const nodeInfo = (await client.node.getNodeInfo()) as NodeInfo;
-				return nodeInfo.networkIdentifier;
+				const client = await getAPIClient(liskCoreV4DataPath);
+				const nodeInfo = await client.node.getNodeInfo();
+				return nodeInfo.chainID;
 		  })();
 
-	return networkID;
+	return chainID;
 };

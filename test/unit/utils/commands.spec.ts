@@ -33,8 +33,7 @@ describe('Test getCommandsToExecPostMigration method', () => {
 	const snapshotHeight = 10815;
 
 	it('should create commandsToExecute text file', async () => {
-		const networkConstant =
-			NETWORK_CONSTANT['4c09e6a781fc4c7bdb936ee815de8f94190f8a7519becd9de2081832be309a99'];
+		const networkConstant = NETWORK_CONSTANT['00000000'];
 
 		const commandsToExecute = await getCommandsToExecPostMigration(
 			networkConstant,

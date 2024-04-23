@@ -6,7 +6,7 @@ module.exports = {
 	},
 	plugins: ['@typescript-eslint'],
 	extends: [
-		'lisk-base/base',
+		'klayr-base/base',
 		'plugin:@typescript-eslint/recommended',
 		'prettier/@typescript-eslint',
 		'plugin:import/errors',

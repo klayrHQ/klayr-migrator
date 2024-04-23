@@ -12,88 +12,14 @@
  * Removal or modification of this copyright notice is prohibited.
  */
 import { Schema } from '@liskhq/lisk-codec';
+import { StakeSharingCoefficient } from 'klayr-framework/dist-node/modules/pos/types';
 
-interface RPCConfig {
-	enable: boolean;
-	mode: 'ipc' | 'ws';
-	port: number;
-}
-
-export interface NetworkConfig {
-	advertiseAddress: boolean;
-	wsMaxPayload: number;
-	maxInboundConnections: number;
-	maxOutboundConnections: number;
-	hostIp: string;
-	port: number;
-	seedPeers: { ip: string; port: number }[];
-}
-
-export interface GenesisConfig {
-	[key: string]: unknown;
-	bftThreshold: number;
-	communityIdentifier: string;
-	blockTime: number;
-	maxPayloadLength: number;
-	rewards: {
-		milestones: string[];
-		offset: number;
-		distance: number;
-	};
-	minFeePerByte: number;
-	baseFees: {
-		moduleID: number;
-		assetID: number;
-		baseFee: string;
-	}[];
-}
-
-export interface PluginOptions extends Record<string, unknown> {
-	readonly loadAsChildProcess?: boolean;
-	readonly alias?: string;
-}
+export type KeyIndex = Record<string, number>;
 
 export interface LoggerConfig {
 	logFileName: string;
 	fileLogLevel: string;
 	consoleLogLevel: string;
-}
-
-export interface TransactionPool {
-	readonly maxTransactions?: number;
-	readonly maxTransactionsPerAccount?: number;
-	readonly transactionExpiryTime?: number;
-	readonly minEntranceFeePriority?: string;
-	readonly minReplacementFeeDifference?: string;
-}
-
-export interface Backup {
-	height: number;
-}
-export interface ApplicationConfigV3 {
-	label: string;
-	version: string;
-	networkVersion: string;
-	rootPath: string;
-	forging: Record<string, unknown>;
-	network: NetworkConfig;
-	logger: LoggerConfig;
-	genesisConfig: GenesisConfig;
-	plugins: {
-		[key: string]: PluginOptions;
-	};
-	backup: Backup;
-	transactionPool: TransactionPool;
-	rpc: RPCConfig;
-}
-
-export interface UnregisteredAccount {
-	address: Buffer;
-	balance: bigint;
-}
-
-export interface UnregisteredAddresses {
-	unregisteredAddresses: UnregisteredAccount[];
 }
 
 export interface AuthAccountEntry {
@@ -112,40 +38,6 @@ export interface AuthStoreEntryBuffer extends Omit<AuthStoreEntry, 'address'> {
 	address: Buffer;
 }
 
-export interface Account {
-	address: Buffer;
-	token: {
-		balance: bigint;
-	};
-	sequence: {
-		nonce: bigint;
-	};
-	keys: {
-		mandatoryKeys: Buffer[];
-		optionalKeys: Buffer[];
-		numberOfSignatures: number;
-	};
-	dpos: {
-		delegate: {
-			username: string;
-			pomHeights: number[];
-			consecutiveMissedBlocks: number;
-			lastForgedHeight: number;
-			isBanned: boolean;
-			totalVotesReceived: bigint;
-		};
-		sentVotes: {
-			delegateAddress: Buffer;
-			amount: bigint;
-		}[];
-		unlocking: {
-			delegateAddress: Buffer;
-			amount: bigint;
-			unvoteHeight: number;
-		}[];
-	};
-}
-
 export interface LegacyStoreEntry {
 	address: string;
 	balance: string;
@@ -159,6 +51,16 @@ export interface LegacyStoreData {
 	accounts: LegacyStoreEntry[];
 }
 
+export interface UserSubstore {
+	address: Buffer;
+	tokenID: Buffer;
+	availableBalance: bigint;
+	lockedBalances: {
+		module: string;
+		amount: bigint;
+	}[];
+}
+
 export interface UserSubstoreEntry {
 	address: string;
 	tokenID: string;
@@ -167,11 +69,6 @@ export interface UserSubstoreEntry {
 		module: string;
 		amount: string;
 	}[];
-}
-
-export interface UserSubstoreEntryBuffer extends Omit<UserSubstoreEntry, 'address' | 'tokenID'> {
-	address: Buffer;
-	tokenID: Buffer;
 }
 
 export interface SupplySubstoreEntry {
@@ -214,11 +111,13 @@ export interface ValidatorEntry {
 	consecutiveMissedBlocks: number;
 	commission: number;
 	lastCommissionIncreaseHeight: number;
-	sharingCoefficients: SharingCoefficient[];
+	sharingCoefficients: StakeSharingCoefficient[];
 }
 
-export interface ValidatorEntryBuffer extends Omit<ValidatorEntry, 'address'> {
+export interface ValidatorEntryBuffer
+	extends Omit<ValidatorEntry, 'address' | 'sharingCoefficients'> {
 	address: Buffer;
+	sharingCoefficients: StakeSharingCoefficient[];
 }
 
 export interface Stake {
@@ -227,12 +126,21 @@ export interface Stake {
 	sharingCoefficients: SharingCoefficient[];
 }
 
+export interface StakeBuffer {
+	validatorAddress: Buffer;
+	amount: bigint;
+	sharingCoefficients: StakeSharingCoefficient[];
+}
+
+export interface PendingUnlockBuffer {
+	validatorAddress: Buffer;
+	amount: bigint;
+	unstakeHeight: number;
+}
+
 export interface Staker {
 	address: string;
-	stakes: {
-		validatorAddress: string;
-		amount: bigint;
-	}[];
+	stakes: Stake[];
 	pendingUnlocks: {
 		validatorAddress: string;
 		amount: bigint;
@@ -240,8 +148,10 @@ export interface Staker {
 	}[];
 }
 
-export interface StakerBuffer extends Omit<Staker, 'address'> {
+export interface StakerBuffer extends Omit<Staker, 'address' | 'stakes' | 'pendingUnlocks'> {
 	address: Buffer;
+	stakes: StakeBuffer[];
+	pendingUnlocks: PendingUnlockBuffer[];
 }
 
 export interface GenesisDataEntry {
@@ -255,11 +165,6 @@ export interface PoSStoreEntry {
 	genesisData: GenesisDataEntry;
 }
 
-export interface LockedBalance {
-	module: string;
-	amount: string;
-}
-
 export interface GenesisAssetEntry {
 	module: string;
 	data: Record<string, unknown>;
@@ -269,15 +174,6 @@ export interface GenesisAssetEntry {
 export interface DelegateWeight {
 	readonly address: Buffer;
 	readonly voteWeight: bigint;
-}
-
-export interface VoteWeight {
-	readonly round: number;
-	readonly delegates: ReadonlyArray<DelegateWeight>;
-}
-
-export interface VoteWeightsWrapper {
-	voteWeights: VoteWeight[];
 }
 
 export type Port = number;
@@ -362,41 +258,15 @@ export interface NetworkConfigLocal {
 	name: string;
 	tokenID: string;
 	prevSnapshotBlockHeight: number;
-}
-
-export interface RegisteredModule {
-	id: number;
-	name: string;
-	actions: string[];
-	events: string[];
-	reducers: string[];
-	transactionAssets: {
-		id: number;
-		name: string;
-	}[];
-}
-
-export interface NodeInfo {
-	readonly version: string;
-	readonly networkVersion: string;
-	readonly networkIdentifier: string;
-	readonly lastBlockID: string;
-	readonly height: number;
-	readonly finalizedHeight: number;
-	readonly syncing: boolean;
-	readonly unconfirmedTransactions: number;
-	readonly genesisConfig: GenesisConfig;
-	readonly registeredModules: RegisteredModule[];
-	readonly backup: Backup;
+	additionalAccounts: { address: Buffer; balance: bigint }[];
 }
 
 export interface ForgingStatus {
 	readonly address: string;
-	lskAddress?: string;
-	readonly forging: boolean;
-	readonly height?: number;
-	readonly maxHeightPrevoted?: number;
-	readonly maxHeightPreviouslyForged?: number;
+	readonly enabled: boolean;
+	readonly height: number;
+	readonly maxHeightPrevoted: number;
+	readonly maxHeightGenerated: number;
 }
 
 export interface FileInfo {
@@ -404,3 +274,12 @@ export interface FileInfo {
 	readonly fileDir: string;
 	readonly filePath: string;
 }
+
+export type BLSTransaction = {
+	senderAddress: Buffer;
+	params: {
+		blsKey: Buffer;
+		generatorKey: Buffer;
+		proofOfPossession: Buffer;
+	};
+};

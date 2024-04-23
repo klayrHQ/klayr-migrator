@@ -11,6 +11,8 @@
  *
  * Removal or modification of this copyright notice is prohibited.
  */
+import { LENGTH_BLS_KEY, LENGTH_GENERATOR_KEY, LENGTH_PROOF_OF_POSSESSION } from './constants';
+
 export const unregisteredAddressesSchema = {
 	$id: '/legacyAccount/unregisteredAddresses',
 	type: 'object',
@@ -205,93 +207,16 @@ export const signingBlockHeaderSchema = {
 	],
 };
 
-export const blockHeaderSchema = {
-	...signingBlockHeaderSchema,
-	$id: '/block/header',
-	properties: {
-		...signingBlockHeaderSchema.properties,
-		signature: { dataType: 'bytes', fieldNumber: 9 },
-	},
-};
-
-export declare const transactionSchema: {
-	$id: string;
-	type: string;
-	required: string[];
-	properties: {
-		moduleID: {
-			dataType: string;
-			fieldNumber: number;
-			minimum: number;
-		};
-		assetID: {
-			dataType: string;
-			fieldNumber: number;
-		};
-		nonce: {
-			dataType: string;
-			fieldNumber: number;
-		};
-		fee: {
-			dataType: string;
-			fieldNumber: number;
-		};
-		senderPublicKey: {
-			dataType: string;
-			fieldNumber: number;
-			minLength: number;
-			maxLength: number;
-		};
-		asset: {
-			dataType: string;
-			fieldNumber: number;
-		};
-		signatures: {
-			type: string;
-			items: {
-				dataType: string;
-			};
-			fieldNumber: number;
-		};
-	};
-};
-
-export const voteWeightsSchema = {
-	$id: '/dpos/voteWeights',
+export const legacyAccountStoreSchema = {
+	$id: '/legacy/store/genesis',
 	type: 'object',
+	required: ['balance'],
 	properties: {
-		voteWeights: {
-			type: 'array',
+		balance: {
+			dataType: 'uint64',
 			fieldNumber: 1,
-			items: {
-				type: 'object',
-				properties: {
-					round: {
-						dataType: 'uint32',
-						fieldNumber: 1,
-					},
-					delegates: {
-						type: 'array',
-						fieldNumber: 2,
-						items: {
-							type: 'object',
-							properties: {
-								address: {
-									dataType: 'bytes',
-									fieldNumber: 1,
-								},
-								voteWeight: {
-									dataType: 'uint64',
-									fieldNumber: 2,
-								},
-							},
-						},
-					},
-				},
-			},
 		},
 	},
-	required: ['voteWeights'],
 };
 
 export const genesisLegacyStoreSchema = {
@@ -336,7 +261,7 @@ export const genesisAuthStoreSchema = {
 				properties: {
 					address: {
 						dataType: 'bytes',
-						format: 'lisk32',
+						format: 'klayr32',
 						fieldNumber: 1,
 					},
 					authAccount: {
@@ -370,6 +295,32 @@ export const genesisAuthStoreSchema = {
 					},
 				},
 			},
+		},
+	},
+};
+
+export const registerKeysParamsSchema = {
+	$id: '/legacy/command/registerKeysParams',
+	type: 'object',
+	required: ['blsKey', 'proofOfPossession', 'generatorKey'],
+	properties: {
+		blsKey: {
+			dataType: 'bytes',
+			minLength: LENGTH_BLS_KEY,
+			maxLength: LENGTH_BLS_KEY,
+			fieldNumber: 1,
+		},
+		proofOfPossession: {
+			dataType: 'bytes',
+			minLength: LENGTH_PROOF_OF_POSSESSION,
+			maxLength: LENGTH_PROOF_OF_POSSESSION,
+			fieldNumber: 2,
+		},
+		generatorKey: {
+			dataType: 'bytes',
+			minLength: LENGTH_GENERATOR_KEY,
+			maxLength: LENGTH_GENERATOR_KEY,
+			fieldNumber: 3,
 		},
 	},
 };

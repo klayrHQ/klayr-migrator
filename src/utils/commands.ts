@@ -20,7 +20,7 @@ import { FILE_NAME } from '../constants';
 import { NetworkConfigLocal } from '../types';
 
 export const getCommandsToExecPostMigration = async (
-	networkConstant: NetworkConfigLocal,
+	_networkConstant: NetworkConfigLocal,
 	snapshotHeight: number,
 	outputDir: string,
 ) => {
@@ -31,27 +31,22 @@ export const getCommandsToExecPostMigration = async (
 		const forgingStatusString = (await read(forgingStatusJsonFilepath)) as string;
 		const forgingStatusJson = JSON.parse(forgingStatusString);
 
-		const chainID = parseInt(networkConstant.tokenID.substring(0, 2), 16);
-
 		for (const forgingStatus of forgingStatusJson) {
 			commandsToExecute.push(
 				'\n',
-				`## Generate/Register the BLS keys for validator ${forgingStatus.lskAddress} - Please modify the command if necessary`,
+				`## Generate/Register the BLS keys for validator ${forgingStatus.address} - Please modify the command if necessary`,
 				'\n',
 			);
 
-			const keysFilepath = resolve(outputDir, FILE_NAME.KEYS);
 			commandsToExecute.push(
-				`lisk-core keys:create --chainid ${chainID} --output ${keysFilepath} --add-legacy`,
-				`lisk-core keys:import --file-path ${keysFilepath}`,
-				`lisk-core endpoint:invoke random_setHashOnion '{ "address":"${forgingStatus.lskAddress}"}'`,
-				`lisk-core endpoint:invoke generator_setStatus '{ "address":"${
-					forgingStatus.lskAddress
+				'klayr-core keys:import --file-path {path_to/your_keys_file.json}',
+				`klayr-core endpoint:invoke random_setHashOnion '{ "address":"${forgingStatus.address}"}'`,
+				`klayr-core endpoint:invoke generator_setStatus '{ "address":"${
+					forgingStatus.address
 				}", "height": ${forgingStatus.height ?? snapshotHeight}, "maxHeightGenerated":  ${
-					forgingStatus.maxHeightPreviouslyForged ?? snapshotHeight
+					forgingStatus.maxHeightGenerated ?? snapshotHeight
 				}, "maxHeightPrevoted":  ${forgingStatus.maxHeightPrevoted ?? snapshotHeight} }' --pretty`,
-				`lisk-core generator:enable ${forgingStatus.lskAddress} --use-status-value`,
-				'lisk-core transaction:create legacy registerKeys 400000 --key-derivation-path=legacy --send',
+				`klayr-core generator:enable ${forgingStatus.address} --use-status-value`,
 			);
 
 			commandsToExecute.push('\n', '-----------------------------------------------------', '\n');

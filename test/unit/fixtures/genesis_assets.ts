@@ -55,7 +55,7 @@ export const genesisAssets = {
 							properties: {
 								address: {
 									dataType: 'bytes',
-									format: 'lisk32',
+									format: 'klayr32',
 									fieldNumber: 1,
 								},
 								authAccount: {
@@ -589,7 +589,7 @@ export const genesisAssets = {
 							properties: {
 								address: {
 									dataType: 'bytes',
-									format: 'lisk32',
+									format: 'klayr32',
 									fieldNumber: 1,
 								},
 								name: {
@@ -673,7 +673,7 @@ export const genesisAssets = {
 							properties: {
 								address: {
 									dataType: 'bytes',
-									format: 'lisk32',
+									format: 'klayr32',
 									fieldNumber: 1,
 								},
 								stakes: {
@@ -753,7 +753,7 @@ export const genesisAssets = {
 								fieldNumber: 2,
 								items: {
 									dataType: 'bytes',
-									format: 'lisk32',
+									format: 'klayr32',
 								},
 							},
 						},

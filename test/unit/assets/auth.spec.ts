@@ -15,73 +15,36 @@ import { address } from '@liskhq/lisk-cryptography';
 import { getAuthModuleEntry, getAuthModuleEntryBuffer } from '../../../src/assets/auth';
 import { MODULE_NAME_AUTH } from '../../../src/constants';
 import {
-	Account,
 	AuthAccountEntry,
 	AuthStoreEntry,
 	AuthStoreEntryBuffer,
 	GenesisAssetEntry,
 } from '../../../src/types';
-import { createFakeDefaultAccount } from '../utils/account';
-import { ADDRESS_LISK32 } from '../utils/regex';
+import { AuthAccount, createFakeDefaultAuthAccount } from '../utils/account';
+import { ADDRESS_KLAYR32 } from '../utils/regex';
 
 const { getLisk32AddressFromAddress } = address;
 
 describe('Build assets/auth', () => {
-	let accounts: Account[];
+	let accounts: AuthAccount[];
 	beforeAll(async () => {
 		accounts = [
-			createFakeDefaultAccount({
-				address: Buffer.from('cc96c0a5db38b968f563e7af6fb435585c889111', 'hex'),
-				token: {
-					balance: BigInt('0'),
-				},
-				sequence: {
-					nonce: BigInt('0'),
-				},
-				keys: {
+			createFakeDefaultAuthAccount({
+				key: Buffer.from('cc96c0a5db38b968f563e7af6fb435585c889111', 'hex'),
+				value: {
+					nonce: '0',
+					numberOfSignatures: 0,
 					mandatoryKeys: [],
 					optionalKeys: [],
-					numberOfSignatures: 0,
-				},
-				dpos: {
-					delegate: {
-						username: '',
-						pomHeights: [],
-						consecutiveMissedBlocks: 0,
-						lastForgedHeight: 0,
-						isBanned: false,
-						totalVotesReceived: BigInt('0'),
-					},
-					sentVotes: [],
-					unlocking: [],
 				},
 			}),
-			createFakeDefaultAccount({
-				address: Buffer.from('584dd8a902822a9469fb2911fcc14ed5fd98220d', 'hex'),
-				keys: {
-					mandatoryKeys: [
-						Buffer.from('456efe283f25ea5bb21476b6dfb77cec4dbd33a4d1b5e60e4dc28e8e8b10fc4e', 'hex'),
-					],
+			createFakeDefaultAuthAccount({
+				key: Buffer.from('584dd8a902822a9469fb2911fcc14ed5fd98220d', 'hex'),
+				value: {
+					nonce: '0',
+					numberOfSignatures: 0,
+					mandatoryKeys: [],
 					optionalKeys: [],
-					numberOfSignatures: 3,
-				},
-				token: {
-					balance: BigInt('0'),
-				},
-				sequence: {
-					nonce: BigInt('0'),
-				},
-				dpos: {
-					delegate: {
-						username: '',
-						pomHeights: [],
-						consecutiveMissedBlocks: 0,
-						lastForgedHeight: 0,
-						isBanned: false,
-						totalVotesReceived: BigInt('0'),
-					},
-					sentVotes: [],
-					unlocking: [],
 				},
 			}),
 		];
@@ -108,7 +71,7 @@ describe('Build assets/auth', () => {
 				.sort((a, b) => a.address.compare(b.address))
 				.map(entry => ({
 					...entry,
-					address: getLisk32AddressFromAddress(entry.address),
+					address: getLisk32AddressFromAddress(entry.address, 'kly'),
 				})),
 		);
 
@@ -118,7 +81,7 @@ describe('Build assets/auth', () => {
 		expect(authDataSubstore).toHaveLength(1);
 		expect(Object.getOwnPropertyNames(authDataSubstore[0])).toEqual(['address', 'authAccount']);
 		authDataSubstore.forEach((asset: { address: string; authAccount: AuthAccountEntry }) => {
-			expect(asset.address).toEqual(expect.stringMatching(ADDRESS_LISK32));
+			expect(asset.address).toEqual(expect.stringMatching(ADDRESS_KLAYR32));
 			expect(Object.getOwnPropertyNames(asset.authAccount)).toEqual([
 				'numberOfSignatures',
 				'mandatoryKeys',

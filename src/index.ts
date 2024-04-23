@@ -15,7 +15,7 @@ import util from 'util';
 import * as fs from 'fs-extra';
 import { join, resolve } from 'path';
 import { ApplicationConfig, PartialApplicationConfig } from 'lisk-framework';
-import { Database } from '@liskhq/lisk-db';
+import { Database, StateDB } from '@liskhq/lisk-db';
 import * as semver from 'semver';
 import { Command, flags as flagsParser } from '@oclif/command';
 import cli from 'cli-ux';
@@ -28,53 +28,51 @@ import {
 	DEFAULT_LISK_CORE_PATH,
 	ERROR_CODE,
 	FILE_NAME,
-	LISK_V3_BACKUP_DATA_DIR,
+	LISK_V4_BACKUP_DATA_DIR,
 	LEGACY_DB_PATH,
 	DEFAULT_DATA_DIR,
+	DEFAULT_KLAYR_CORE_PATH,
 } from './constants';
 import { getAPIClient } from './client';
 import {
 	getConfig,
 	migrateUserConfig,
-	resolveConfigPathByNetworkID,
 	createBackup,
 	writeConfig,
 	validateConfig,
-} from './utils/config';
-import {
-	observeChainHeight,
-	getTokenIDLsk,
-	setTokenIDLskByNetID,
+	setTokenIDKlyByNetID,
 	setPrevSnapshotBlockHeightByNetID,
-} from './utils/chain';
-import { captureForgingStatusAtSnapshotHeight } from './events';
-import {
-	copyGenesisBlock,
-	createGenesisBlock,
-	getGenesisBlockCreateCommand,
+	getTokenIDKly,
 	writeGenesisAssets,
+	createGenesisBlock,
 	writeGenesisBlock,
-} from './utils/genesis_block';
+	copyGenesisBlock,
+	getGenesisBlockCreateCommand,
+	setAdditionalAccountsByChainID,
+	resolveConfigDefaultPath,
+	observeChainHeight,
+} from './utils';
+import { captureForgingStatusAtSnapshotHeight } from './events';
 import { CreateAsset } from './createAsset';
-import { ApplicationConfigV3, NetworkConfigLocal, NodeInfo } from './types';
+import { NetworkConfigLocal } from './types';
 import {
-	installLiskCore,
-	startLiskCore,
-	isLiskCoreV3Running,
-	getLiskCoreStartCommand,
+	startKlayrCore,
+	isLiskCoreV4Running,
+	getKlayrCoreStartCommand,
+	installKlayrCore,
 } from './utils/node';
-import { resolveAbsolutePath, verifyOutputPath, resolveSnapshotPath } from './utils/path';
+import { resolveAbsolutePath, resolveSnapshotPath, verifyOutputPath } from './utils/path';
 import { execAsync } from './utils/process';
 import { getBlockHeaderByHeight } from './utils/block';
 import { MigratorException } from './utils/exception';
 import { writeCommandsToExec } from './utils/commands';
-import { getNetworkIdentifier } from './utils/network';
+import { getChainId } from './utils/network';
 import { extractTarBall } from './utils/fs';
 import { downloadAndExtract } from './utils/download';
 
 let configCoreV4: PartialApplicationConfig;
-class LiskMigrator extends Command {
-	public static description = 'Migrate Lisk Core to latest version';
+class KlayrMigrator extends Command {
+	public static description = 'Migrate Lisk Core to Klayr Core';
 
 	public static flags = {
 		version: flagsParser.version({ char: 'v' }),
@@ -83,13 +81,13 @@ class LiskMigrator extends Command {
 		output: flagsParser.string({
 			char: 'o',
 			required: false,
-			description: `File path to write the genesis block. If not provided, it will default to cwd/output/{v3_networkIdentifier}/genesis_block.blob. Do not use any value starting with the default data path reserved for Lisk Core: '${DEFAULT_LISK_CORE_PATH}'.`,
+			description: `File path to write the genesis block. If not provided, it will default to cwd/output/{v4_networkIdentifier}/genesis_block.blob. Do not use any value starting with the default data path reserved for Lisk Core: '${DEFAULT_LISK_CORE_PATH}'.`,
 		}),
-		'lisk-core-v3-data-path': flagsParser.string({
+		'lisk-core-data-path': flagsParser.string({
 			char: 'd',
 			required: false,
 			description:
-				'Path where the Lisk Core v3.x instance is running. When not supplied, defaults to the default data directory for Lisk Core.',
+				'Path where the Lisk Core v4.x instance is running. When not supplied, defaults to the default data directory for Lisk Core.',
 		}),
 		'snapshot-height': flagsParser.integer({
 			char: 's',
@@ -101,7 +99,7 @@ class LiskMigrator extends Command {
 		config: flagsParser.string({
 			char: 'c',
 			required: false,
-			description: 'Custom configuration file path for Lisk Core v3.1.x.',
+			description: 'Custom configuration file path for Lisk Core v4.0.x.',
 		}),
 		'auto-migrate-config': flagsParser.boolean({
 			required: false,
@@ -109,11 +107,11 @@ class LiskMigrator extends Command {
 			description: 'Migrate user configuration automatically. Defaults to false.',
 			default: false,
 		}),
-		'auto-start-lisk-core-v4': flagsParser.boolean({
+		'auto-start-klayr-core-v4': flagsParser.boolean({
 			required: false,
-			env: 'AUTO_START_LISK_CORE',
+			env: 'AUTO_START_KLAYR_CORE',
 			description:
-				'Start Lisk Core v4 automatically. Defaults to false. When using this flag, kindly open another terminal window to stop Lisk Core v3.1.x for when the migrator prompts.',
+				'Start Klayr Core v4 automatically. Defaults to false. When using this flag, kindly open another terminal window to stop Lisk Core v4.0.x for when the migrator prompts.',
 			default: false,
 		}),
 		'page-size': flagsParser.integer({
@@ -145,32 +143,33 @@ class LiskMigrator extends Command {
 			env: 'NETWORK',
 			description:
 				"Network to be considered for the migration. Depends on the '--snapshot-path' flag.",
-			options: ['mainnet', 'testnet'],
+			options: ['mainnet', 'testnet', 'devnet'],
 			exclusive: [
-				'lisk-core-v3-data-path',
+				'lisk-core-data-path',
 				'config',
 				'auto-migrate-config',
 				'auto-start-lisk-core-v4',
+				'auto-start-klayr-core-v4',
 			],
 		}),
 	};
 
 	public async run(): Promise<void> {
-		const { flags } = this.parse(LiskMigrator);
-		const liskCoreV3DataPath = resolveAbsolutePath(
-			flags['lisk-core-v3-data-path'] ?? DEFAULT_LISK_CORE_PATH,
+		const startTime = Date.now();
+		const { flags } = this.parse(KlayrMigrator);
+		const liskCoreV4DataPath = resolveAbsolutePath(
+			flags['lisk-core-data-path'] ?? DEFAULT_LISK_CORE_PATH,
 		);
 		const outputPath = flags.output ?? join(__dirname, '..', 'output');
 		const snapshotHeight = flags['snapshot-height'];
 		const customConfigPath = flags.config;
 		const autoMigrateUserConfig = flags['auto-migrate-config'] ?? false;
-		const autoStartLiskCoreV4 = flags['auto-start-lisk-core-v4'];
-		const pageSize = Number(flags['page-size']);
+		const autoStartKlayrCoreV4 = flags['auto-start-klayr-core-v4'];
 		const snapshotPath = flags['snapshot-path']
 			? resolveAbsolutePath(flags['snapshot-path'])
 			: (flags['snapshot-path'] as string);
 		const snapshotURL = flags['snapshot-url'] as string;
-		const network = flags.network as string;
+		const network = flags.network?.toLowerCase() as string;
 		const useSnapshot = !!(snapshotPath || snapshotURL);
 
 		// Custom flag dependency check because neither exactlyOne or relationships properties are working for network
@@ -188,9 +187,9 @@ class LiskMigrator extends Command {
 
 		verifyOutputPath(outputPath);
 
-		const networkIdentifier: string = await getNetworkIdentifier(network, liskCoreV3DataPath);
-		const networkConstant: NetworkConfigLocal = NETWORK_CONSTANT[networkIdentifier];
-		const outputDir: string = flags.output ? outputPath : `${outputPath}/${networkIdentifier}`;
+		const chainId: string = await getChainId(network, liskCoreV4DataPath);
+		const networkConstant: NetworkConfigLocal = NETWORK_CONSTANT[chainId];
+		const outputDir: string = flags.output ? outputPath : `${outputPath}/${chainId}`;
 
 		// Ensure the output directory is present
 		if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
@@ -209,14 +208,15 @@ class LiskMigrator extends Command {
 					cli.action.stop(`Successfully extracted snapshot to ${dataDir}`);
 				}
 			} else {
-				const client = await getAPIClient(liskCoreV3DataPath);
-				const nodeInfo = (await client.node.getNodeInfo()) as NodeInfo;
+				const client = await getAPIClient(liskCoreV4DataPath);
+				const nodeInfo = await client.node.getNodeInfo();
 				const { version: appVersion } = nodeInfo;
 
 				cli.action.start('Verifying if backup height from node config matches snapshot height');
-				if (snapshotHeight !== nodeInfo.backup.height) {
+				const config = await getConfig(this, liskCoreV4DataPath, customConfigPath);
+				if (snapshotHeight !== config.system.backup.height) {
 					this.error(
-						`Lisk Core v3 backup height mismatch. Actual: ${nodeInfo.backup.height}, Expected: ${snapshotHeight}.`,
+						`Lisk Core v4 backup height mismatch. Actual: ${config.system.backup.height}, Expected: ${snapshotHeight}.`,
 					);
 				}
 				cli.action.stop('Snapshot height matches backup height');
@@ -235,10 +235,10 @@ class LiskMigrator extends Command {
 				// This information is necessary for the node operators to enable generator post-migration without getting PoM'd
 				captureForgingStatusAtSnapshotHeight(this, client, snapshotHeight, outputDir);
 
-				if (autoStartLiskCoreV4) {
+				if (autoStartKlayrCoreV4) {
 					if (!networkConstant) {
 						this.error(
-							`Unknown network detected. No NETWORK_CONSTANT defined for networkID: ${networkIdentifier}.`,
+							`Unknown network detected. No NETWORK_CONSTANT defined for networkID: ${chainId}.`,
 						);
 					}
 				}
@@ -253,22 +253,23 @@ class LiskMigrator extends Command {
 
 				if (semver.lt(appVersion, MIN_SUPPORTED_LISK_CORE_VERSION)) {
 					this.error(
-						`Lisk Migrator is not compatible with Lisk Core version ${appVersion}. Minimum supported version is ${MIN_SUPPORTED_LISK_CORE_VERSION}.`,
+						`Klayr Migrator is not compatible with Lisk Core version ${appVersion}. Minimum supported version is ${MIN_SUPPORTED_LISK_CORE_VERSION}.`,
 					);
 				}
 				cli.action.stop(`${appVersion} detected`);
 
 				await observeChainHeight({
 					label: 'Waiting for snapshot height to be finalized',
-					liskCoreV3DataPath,
+					liskCoreV4DataPath,
 					height: snapshotHeight,
 					delay: 500,
 					isFinal: true,
 				});
 			}
 
-			await setTokenIDLskByNetID(networkIdentifier);
-			await setPrevSnapshotBlockHeightByNetID(networkIdentifier);
+			setTokenIDKlyByNetID(chainId);
+			setPrevSnapshotBlockHeightByNetID(chainId);
+			setAdditionalAccountsByChainID(chainId);
 
 			// Create new DB instance based on the snapshot path
 			cli.action.start('Creating database instance');
@@ -276,21 +277,21 @@ class LiskMigrator extends Command {
 				useSnapshot,
 				snapshotPath,
 				dataDir,
-				liskCoreV3DataPath,
+				liskCoreV4DataPath,
 			);
-
-			const db = new Database(snapshotDirPath);
+			const db = new StateDB(`${snapshotDirPath}/state.db`);
+			const blockchainDB = new Database(`${snapshotDirPath}/blockchain.db`);
 			cli.action.stop();
 
 			// Create genesis assets
 			cli.action.start('Creating genesis assets');
-			const createAsset = new CreateAsset(db);
-			const tokenID = getTokenIDLsk();
-			const genesisAssets = await createAsset.init(snapshotHeight, tokenID, pageSize);
+			const createAsset = new CreateAsset(db, blockchainDB);
+			const tokenID = getTokenIDKly();
+			const genesisAssets = await createAsset.init(snapshotHeight, tokenID);
 			cli.action.stop();
 
 			// Create an app instance for creating genesis block
-			const defaultConfigFilePath = await resolveConfigPathByNetworkID(networkIdentifier);
+			const defaultConfigFilePath = await resolveConfigDefaultPath(networkConstant.name);
 			const defaultConfigV4 = await fs.readJSON(defaultConfigFilePath);
 
 			cli.action.start(`Exporting genesis block to the path ${outputDir}`);
@@ -299,17 +300,16 @@ class LiskMigrator extends Command {
 
 			if (autoMigrateUserConfig && !useSnapshot) {
 				// User specified custom config file
-				const configV3: ApplicationConfigV3 = customConfigPath
-					? await getConfig(this, liskCoreV3DataPath, networkIdentifier, customConfigPath)
-					: await getConfig(this, liskCoreV3DataPath, networkIdentifier);
-
+				const configV4: ApplicationConfig = customConfigPath
+					? await getConfig(this, liskCoreV4DataPath, customConfigPath)
+					: await getConfig(this, liskCoreV4DataPath);
 				cli.action.start('Creating backup for old config');
-				await createBackup(configV3);
+				await createBackup(configV4);
 				cli.action.stop();
 
 				cli.action.start('Migrating user configuration');
 				const migratedConfigV4 = (await migrateUserConfig(
-					configV3,
+					configV4,
 					defaultConfigV4,
 					snapshotHeight,
 				)) as ApplicationConfig;
@@ -334,13 +334,13 @@ class LiskMigrator extends Command {
 				configCoreV4 = migratedConfigV4 as PartialApplicationConfig;
 			}
 
-			cli.action.start('Installing Lisk Core v4');
-			await installLiskCore();
+			cli.action.start('Installing Klayr Core v4');
+			await installKlayrCore();
 			cli.action.stop();
 
 			cli.action.start('Creating genesis block');
 			const blockHeaderAtSnapshotHeight = (await getBlockHeaderByHeight(
-				db,
+				blockchainDB,
 				snapshotHeight,
 			)) as BlockHeader;
 			await createGenesisBlock(
@@ -358,53 +358,53 @@ class LiskMigrator extends Command {
 			cli.action.stop();
 
 			if (!useSnapshot) {
-				if (autoStartLiskCoreV4) {
+				if (autoStartKlayrCoreV4) {
 					try {
 						if (!autoMigrateUserConfig) {
 							configCoreV4 = defaultConfigV4;
 						}
 
-						cli.action.start('Copying genesis block to the Lisk Core executable directory');
-						const liskCoreExecPath = await execAsync('which lisk-core');
-						const liskCoreV4ConfigPath = resolve(
-							liskCoreExecPath,
+						cli.action.start('Copying genesis block to the Klayr Core executable directory');
+						const klayrCoreExecPath = await execAsync('which klayr-core');
+						const klayrCoreV4ConfigPath = resolve(
+							klayrCoreExecPath,
 							'../..',
-							`lib/node_modules/lisk-core/config/${networkConstant.name}`,
+							`lib/node_modules/klayr-core/config/${networkConstant.name}`,
 						);
 
 						await copyGenesisBlock(
 							`${outputDir}/genesis_block.blob`,
-							`${liskCoreV4ConfigPath}/genesis_block.blob`,
+							`${klayrCoreV4ConfigPath}/genesis_block.blob`,
 						);
-						this.log(`Genesis block has been copied to: ${liskCoreV4ConfigPath}.`);
+						this.log(`Genesis block has been copied to: ${klayrCoreV4ConfigPath}.`);
 						cli.action.stop();
 
 						// Ask user to manually stop Lisk Core v3 and continue
-						const isLiskCoreV3Stopped = await cli.confirm(
-							"Please stop Lisk Core v3 to continue. Type 'yes' and press Enter when ready. [yes/no]",
+						const isLiskCoreV4Stopped = await cli.confirm(
+							"Please stop Lisk Core to continue. Type 'yes' and press Enter when you stopped Lisk Core. [yes/no]",
 						);
 
-						if (isLiskCoreV3Stopped) {
+						if (isLiskCoreV4Stopped) {
 							let numTriesLeft = 3;
 							while (numTriesLeft) {
 								numTriesLeft -= 1;
 
-								const isCoreV3Running = await isLiskCoreV3Running(liskCoreV3DataPath);
-								if (!isCoreV3Running) break;
+								const isCoreV4Running = await isLiskCoreV4Running(liskCoreV4DataPath);
+								if (!isCoreV4Running) break;
 
 								if (numTriesLeft >= 0) {
 									const isStopReconfirmed = await cli.confirm(
-										"Lisk Core v3 still running. Please stop the node, type 'yes' to proceed and 'no' to exit. [yes/no]",
+										"Lisk Core still running. Please stop the node, type 'yes' to proceed and 'no' to exit. [yes/no]",
 									);
 									if (!isStopReconfirmed) {
 										throw new Error(
-											`Cannot proceed with Lisk Core v4 auto-start. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Lisk Core v4 data directory (e.g: ${DEFAULT_LISK_CORE_PATH}/data/legacy.db/). Exiting!!!`,
+											`Cannot proceed with Klayr Core auto-start. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
 										);
 									} else if (numTriesLeft === 0 && isStopReconfirmed) {
-										const isCoreV3StillRunning = await isLiskCoreV3Running(liskCoreV3DataPath);
-										if (isCoreV3StillRunning) {
+										const isCoreV4StillRunning = await isLiskCoreV4Running(liskCoreV4DataPath);
+										if (isCoreV4StillRunning) {
 											throw new Error(
-												`Cannot auto-start Lisk Core v4 as Lisk Core v3 is still running. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Lisk Core v4 data directory (e.g: ${DEFAULT_LISK_CORE_PATH}/data/legacy.db/). Exiting!!!`,
+												`Cannot auto-start Klayr Core as Lisk Core is still running. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
 											);
 										}
 									}
@@ -412,52 +412,60 @@ class LiskMigrator extends Command {
 							}
 
 							const isUserConfirmed = await cli.confirm(
-								`Start Lisk Core with the following configuration? [yes/no]
+								`Start Klayr Core with the following configuration? [yes/no]
 							${util.inspect(configCoreV4, false, 3)} `,
 							);
 
 							if (isUserConfirmed) {
-								cli.action.start('Starting Lisk Core v4');
-								const networkName = networkConstant.name as string;
-								await startLiskCore(this, liskCoreV3DataPath, configCoreV4, networkName, outputDir);
+								cli.action.start('Starting Klayr Core');
+								const networkName = networkConstant.name;
+								await startKlayrCore(
+									this,
+									liskCoreV4DataPath,
+									configCoreV4,
+									networkName,
+									outputDir,
+								);
 								this.log(
-									`Started Lisk Core v4 at default data directory ('${DEFAULT_LISK_CORE_PATH}').`,
+									`Started Klayr Core v4 at default data directory ('${DEFAULT_KLAYR_CORE_PATH}').`,
 								);
 								cli.action.stop();
 							} else {
 								this.log(
-									'User did not accept the migrated config. Skipping the Lisk Core v4 auto-start process.',
+									'User did not accept the migrated config. Skipping the Klayr Core auto-start process.',
 								);
 							}
 						} else {
 							throw new Error(
-								`User did not confirm Lisk Core v3 node shutdown. Skipping the Lisk Core v4 auto-start process. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Lisk Core v4 data directory (e.g: ${DEFAULT_LISK_CORE_PATH}/data/legacy.db/). Exiting!!!`,
+								`User did not confirm Lisk Core node shutdown. Skipping the Klayr Core auto-start process. Please continue manually. In order to access legacy blockchain information posts-migration, please copy the contents of the ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core v4 data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/). Exiting!!!`,
 							);
 						}
 					} catch (err) {
-						const errorMsg = `Failed to auto-start Lisk Core v4.\nError: ${(err as Error).message}`;
+						const errorMsg = `Failed to auto-start Klayr Core v4.\nError: ${
+							(err as Error).message
+						}`;
 						throw new MigratorException(
 							errorMsg,
-							err instanceof MigratorException ? err.code : ERROR_CODE.LISK_CORE_START,
+							err instanceof MigratorException ? err.code : ERROR_CODE.KLAYR_CORE_START,
 						);
 					}
 				} else {
 					this.log(
-						`Please copy the contents of ${snapshotDirPath} directory to 'data/legacy.db' under the Lisk Core v4 data directory (e.g: ${DEFAULT_LISK_CORE_PATH}/data/legacy.db/) in order to access legacy blockchain information.`,
+						`Please copy the contents of ${snapshotDirPath} directory to 'data/legacy.db' under the Klayr Core data directory (e.g: ${DEFAULT_KLAYR_CORE_PATH}/data/legacy.db/) in order to access legacy blockchain information.`,
 					);
-					this.log('Please copy genesis block to the Lisk Core V4 network directory.');
+					this.log('Please copy genesis block to the Klayr Core network directory.');
 				}
 			}
 		} catch (error) {
 			const commandsToExecute: string[] = [];
 			const code = Number(`${(error as MigratorException).code}`);
 
-			const basicStartCommand = `lisk-core start --network ${networkConstant.name}`;
-			const liskCoreStartCommand = getLiskCoreStartCommand() ?? basicStartCommand;
+			const basicStartCommand = `klayr-core start --network ${networkConstant.name}`;
+			const klayrCoreStartCommand = getKlayrCoreStartCommand() ?? basicStartCommand;
 
-			const backupLegacyDataDirCommand = `mv ${liskCoreV3DataPath} ${LISK_V3_BACKUP_DATA_DIR}`;
+			const backupLegacyDataDirCommand = `mv ${liskCoreV4DataPath} ${LISK_V4_BACKUP_DATA_DIR}`;
 			const copyLegacyDBCommand = `cp -r ${
-				(resolve(LISK_V3_BACKUP_DATA_DIR, SNAPSHOT_DIR), LEGACY_DB_PATH)
+				(resolve(LISK_V4_BACKUP_DATA_DIR, SNAPSHOT_DIR), LEGACY_DB_PATH)
 			}`;
 
 			if (
@@ -469,7 +477,7 @@ class LiskMigrator extends Command {
 				commandsToExecute.push(
 					'\n',
 					'## Create the genesis block',
-					'## NOTE: This requires installing Lisk Core v4 locally. Please visit https://lisk.com/documentation/lisk-core/v4/setup/npm.html for further instructions',
+					'## NOTE: This requires installing Klayr Core locally. Please visit https://klayr.xyz/documentation/klayr-core/setup/npm.html for further instructions',
 					'\n',
 				);
 				commandsToExecute.push(genesisBlockCreateCommand);
@@ -484,7 +492,7 @@ class LiskMigrator extends Command {
 					ERROR_CODE.BACKUP_LEGACY_DATA_DIR,
 				].includes(code)
 			) {
-				commandsToExecute.push('\n', '## Backup Lisk Core v3 data directory', '\n');
+				commandsToExecute.push('\n', '## Backup Lisk Core data directory', '\n');
 				commandsToExecute.push(backupLegacyDataDirCommand);
 				commandsToExecute.push('\n', '-----------------------------------------------------', '\n');
 			}
@@ -500,7 +508,7 @@ class LiskMigrator extends Command {
 			) {
 				commandsToExecute.push(
 					'\n',
-					'## Copy legacy (v3) blockchain information to Lisk Core v4 legacy.db',
+					'## Copy legacy (v4) blockchain information to Klayr Core legacy.db',
 					'\n',
 				);
 				commandsToExecute.push(copyLegacyDBCommand);
@@ -514,15 +522,15 @@ class LiskMigrator extends Command {
 					ERROR_CODE.GENESIS_BLOCK_CREATE,
 					ERROR_CODE.BACKUP_LEGACY_DATA_DIR,
 					ERROR_CODE.COPY_LEGACY_DB,
-					ERROR_CODE.LISK_CORE_START,
+					ERROR_CODE.KLAYR_CORE_START,
 				].includes(code)
 			) {
 				commandsToExecute.push(
 					'\n',
-					'## Lisk Core v4 start command - Please modify if necessary',
+					'## Klayr Core start command - Please modify if necessary',
 					'\n',
 				);
-				commandsToExecute.push(liskCoreStartCommand);
+				commandsToExecute.push(klayrCoreStartCommand);
 				commandsToExecute.push('\n', '-----------------------------------------------------', '\n');
 			}
 
@@ -542,10 +550,10 @@ class LiskMigrator extends Command {
 		}
 
 		await writeCommandsToExec(this, networkConstant, snapshotHeight, outputDir);
-
-		this.log('Successfully finished migration. Exiting!!!');
+		this.log(`Total execution time: ${(Date.now() - startTime) / 1000}s`);
+		this.log('Successfully finished migration. We are now Klayr!!!');
 		process.exit(0);
 	}
 }
 
-export = LiskMigrator;
+export = KlayrMigrator;

@@ -66,7 +66,7 @@ export const createGenesisBlock = async (
 		const timestamp = blockHeaderAtSnapshotHeight.timestamp + SNAPSHOT_TIME_GAP;
 		const previousBlockID = blockHeaderAtSnapshotHeight.id.toString('hex');
 
-		genesisBlockCreateCommand = `lisk-core genesis-block:create --network ${network} --config=${configFilepath} --output=${outputDir} --assets-file=${outputDir}/genesis_assets.json --height=${height} --previous-block-id=${previousBlockID} --timestamp=${timestamp} --export-json`;
+		genesisBlockCreateCommand = `klayr-core genesis-block:create --network ${network} --config=${configFilepath} --output=${outputDir} --assets-file=${outputDir}/genesis_assets.json --height=${height} --previous-block-id=${previousBlockID} --timestamp=${timestamp} --export-json`;
 		_this.log(
 			`\nExecuting the following command to generate the genesis block:\n${genesisBlockCreateCommand}`,
 		);

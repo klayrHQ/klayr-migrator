@@ -641,23 +641,133 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@liskhq/lisk-api-client@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-api-client/-/lisk-api-client-5.2.0.tgz#b697b3a72262d0eee9349088d773a89c974e8f41"
-  integrity sha512-NrJuptGMisY7VnXjEubzDA4MOevGBL3aUP+7Zrmbj/nShXOvsx8XYbr3xXUAIt62BVRAxu3HvS741x0AGSxDpA==
+"@klayr/api-client@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@klayr/api-client/-/api-client-6.0.3.tgz#83bdc310a1800659bb4179ab7a584fbe0a5da061"
+  integrity sha512-IK6np9RpB4401dCsK5aBVLXxAAU1kMODkAjL+eKTcEbNaiPgjFAyE5VuuW+1C47+RYOBYU7hvyixLlOc9XkFLw==
   dependencies:
-    "@liskhq/lisk-codec" "^0.3.0"
-    "@liskhq/lisk-cryptography" "^3.3.0"
-    "@liskhq/lisk-transactions" "^5.3.0"
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/transactions" "^6.0.2"
+    "@klayr/validator" "^0.8.2"
     isomorphic-ws "4.0.1"
-    pm2-axon "4.0.1"
-    pm2-axon-rpc "0.7.1"
-    ws "7.5.7"
+    ws "8.11.0"
+    zeromq "6.0.0-beta.6"
 
-"@liskhq/lisk-api-client@^6.0.0":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-api-client/-/lisk-api-client-6.0.1.tgz#5b78a48c3c98b047391e07114eb05887709a6f85"
-  integrity sha512-eyyZz0ZAUiGKCX9armNkEpYVmb/yz2JhKL6OygDUtbPO7X7V6Ofu7XH+mBoPdtPEyNhi59idSnJuOclpZ5kWtw==
+"@klayr/chain@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@klayr/chain/-/chain-0.5.2.tgz#f158198702290da56ce3b6afae0e313f7f1da8da"
+  integrity sha512-RH3h/q6IqJsCm/Kaz2rwtS69nITeaPiQKqIED96cdzmddgOjnJr3KA5fA+fl+P1HJETS6Cc3jhuo1ggWEjoZTQ==
+  dependencies:
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/tree" "^0.4.2"
+    "@klayr/utils" "^0.4.2"
+    "@klayr/validator" "^0.8.2"
+    "@liskhq/lisk-db" "0.3.10"
+    debug "4.3.4"
+
+"@klayr/codec@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@klayr/codec/-/codec-0.4.2.tgz#02793b20e25523b0b1871f184e8249d8ade119b8"
+  integrity sha512-dUPkhQT6B5CCCNIvgqKXqt0kheCIEmrfb5gd9sx52DcQaGjetfHQ5XJgBsbS+UDgZmK5FPKcpw2rpXdld0p1wg==
+  dependencies:
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/utils" "^0.4.2"
+    "@klayr/validator" "^0.8.2"
+
+"@klayr/cryptography@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@klayr/cryptography/-/cryptography-4.0.2.tgz#49237931227f6d9ceae8da69ea76823c0db62e9d"
+  integrity sha512-AwgATewCX5RO15NjiaOOfbZ1xZHxorlJ79BL2g7hOr/dcZg1kynmRwKOribxz/0XvGH7YgL2UYdJJxWfD6fpnA==
+  dependencies:
+    "@klayr/passphrase" "^4.0.2"
+    buffer-reverse "1.0.1"
+    hash-wasm "4.9.0"
+    tweetnacl "1.0.3"
+
+"@klayr/p2p@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@klayr/p2p/-/p2p-0.9.2.tgz#6fdca4294a9010336e770da0143ee0c443e96e85"
+  integrity sha512-9IYe8+V08+aDSDD7tG4i2bnUNY2q9/bEhyLa29baUd938bBsxKq/7x+hJBHTxL7vw41sYWjgDKfWmE9w6I0d4Q==
+  dependencies:
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/validator" "^0.8.2"
+    lodash.shuffle "4.2.0"
+    semver "7.5.2"
+    socketcluster-client "14.3.1"
+    socketcluster-server "14.6.0"
+
+"@klayr/passphrase@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@klayr/passphrase/-/passphrase-4.0.2.tgz#b32765cea17d5b543ca2ff0ecb4f28ce054e1955"
+  integrity sha512-A+ajj7ns9EeOpVZtUKFYNlXr8A+BJvZVU9Zd6NSTG3uWpQU16+u1ahSVsSDcA73xESbLEHEYlEGBBDxv1h3l2g==
+  dependencies:
+    bip39 "3.0.3"
+
+"@klayr/transaction-pool@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@klayr/transaction-pool/-/transaction-pool-0.7.2.tgz#bd0cac66d0779c7e3c7c1e11b589322104735c36"
+  integrity sha512-Ix5Whf1CTI5EEjS+EjqD7OQYA12f5Q5qanRDP163ztRDivgxJ3YiU+QmSwuUnFoG8bG3uYCAcAfuXeUzlohTFQ==
+  dependencies:
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/utils" "^0.4.2"
+    debug "4.3.4"
+
+"@klayr/transactions@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@klayr/transactions/-/transactions-6.0.2.tgz#e33c3c8c540b01233112d730da12323efe8cac8b"
+  integrity sha512-1cbLz2pY6T0+d+bAFF7aKQmK1hjTSrxlQ0wuBmuOFcSUh1GvU1bldhgvTwY/fZVePlFCN5JXy4mOekT7fGQPXQ==
+  dependencies:
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/validator" "^0.8.2"
+
+"@klayr/tree@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@klayr/tree/-/tree-0.4.2.tgz#e6238419a4f48a9b2f229f5296c0f64acddab304"
+  integrity sha512-Uzdu6jVvvtUZKVsV11kFB7xWFhoyucRngpKEvNg/p+yHfsEYYRLkXib+eiyw60+IFMwUGfrEOv+6WYSA44li6g==
+  dependencies:
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/utils" "^0.4.2"
+
+"@klayr/utils@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@klayr/utils/-/utils-0.4.2.tgz#44c9c18fb8549d420ec84b775ab0dfdc3d76e6dc"
+  integrity sha512-qEtBp813Ns8YeNq3QUIZk9HHHNHO6BPwlOzLUDkX1qHu77SWNFQgzSkOEOxoNQaY5CW+un0uBB3jH0K8L4U/3w==
+  dependencies:
+    lodash.clonedeep "4.5.0"
+
+"@klayr/validator@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@klayr/validator/-/validator-0.8.2.tgz#091fcf0c50673b428f447a13d625792796d3287d"
+  integrity sha512-pbLwVfOH34sy/sk3wOwm9EQB+c5kQo/PCmWbwOnaVvk+WNVQm315irvQ8XOyY21QVlapE6hAG5hC9c/CzLsAsw==
+  dependencies:
+    "@klayr/cryptography" "^4.0.2"
+    ajv "8.1.0"
+    ajv-formats "2.1.1"
+    debug "4.3.4"
+    semver "7.5.2"
+    validator "13.7.0"
+
+"@liskhq/lisk-api-client@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-api-client/-/lisk-api-client-6.1.0.tgz#816dbdf801db028cf23a5639ae8bc6e77f02b0a1"
+  integrity sha512-+OYDsrpt3VPM/Vs/nhzfyq7Tw4DRLAjJ6ymXdnfvecz31WniJCfbxIqTn+LD9U0qqPISvj5bF399USXKldRkLg==
+  dependencies:
+    "@liskhq/lisk-codec" "^0.5.0"
+    "@liskhq/lisk-cryptography" "^4.1.0"
+    "@liskhq/lisk-transactions" "^6.1.0"
+    "@liskhq/lisk-validator" "^0.9.0"
+    isomorphic-ws "4.0.1"
+    ws "8.11.0"
+    zeromq "6.0.0-beta.6"
+
+"@liskhq/lisk-api-client@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-api-client/-/lisk-api-client-6.0.2.tgz#0fd43b1f6f56725a461c3cb261dbcfa801bef07b"
+  integrity sha512-+i1z1iMCp4h7Uyg1T5Y6KZYnGkuRidCxNmRCaMGlc5V7yTk9eog2D+gVmnTQY+81vz+7GymvodgSJdFviHAxnQ==
   dependencies:
     "@liskhq/lisk-codec" "^0.4.0"
     "@liskhq/lisk-cryptography" "^4.0.0"
@@ -667,23 +777,10 @@
     ws "8.11.0"
     zeromq "6.0.0-beta.6"
 
-"@liskhq/lisk-chain@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-chain/-/lisk-chain-0.4.0.tgz#e37f0c19ab096a82cbc75ec1094247dd563f9fdb"
-  integrity sha512-drMl18q9iBSmSOU0fPADEWWlYNOVyR3Xz1VInmhjmxvv8sdrBXzJJHVAmZ21sb3Vd2lJAsyfB/zjgIO4KS54iA==
-  dependencies:
-    "@liskhq/lisk-codec" "^0.3.0"
-    "@liskhq/lisk-cryptography" "^3.3.0"
-    "@liskhq/lisk-db" "^0.3.6"
-    "@liskhq/lisk-tree" "^0.3.0"
-    "@liskhq/lisk-utils" "^0.3.0"
-    "@liskhq/lisk-validator" "^0.7.0"
-    debug "4.3.4"
-
-"@liskhq/lisk-chain@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-chain/-/lisk-chain-0.5.0.tgz#7f1ff10adbbadbac67c9953b15bc02fd58d7df08"
-  integrity sha512-zduu7pBzAjUODeEBAd2q1zmHAXrcXmM4Ro+6QCBcA6K707HDOK9uruRW2L4GlxC0mhOoknHynh8iZ6syntT3XQ==
+"@liskhq/lisk-chain@0.5.1", "@liskhq/lisk-chain@^0.5.1":
+  version "0.5.1"
+  resolved "https://npm.klayr.dev/@liskhq/lisk-chain/-/lisk-chain-0.5.1.tgz#29fc1ff3c03388e6465bb78043869763aa9b868a"
+  integrity sha512-LLf77czAY0SxJOHoQUio2r4fp5BxmfqZTBlhEt9Oy1jmVB3+XR8HSczCcGi0B09owiKYWXbZpYw3Q4R/ic4N0g==
   dependencies:
     "@liskhq/lisk-codec" "^0.4.0"
     "@liskhq/lisk-cryptography" "^4.0.0"
@@ -693,46 +790,35 @@
     "@liskhq/lisk-validator" "^0.8.0"
     debug "4.3.4"
 
-"@liskhq/lisk-codec@0.4.0", "@liskhq/lisk-codec@^0.4.0":
+"@liskhq/lisk-codec@0.5.0", "@liskhq/lisk-codec@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-codec/-/lisk-codec-0.5.0.tgz#39ae557c30d2cc11b449f6db34054928fcf98e78"
+  integrity sha512-IW8s3s1JvHZMx2SmMh8MJyUE7D9gJGJyJq5s8xxWik4IOTN/zRdNFK2m1qIgL+6T8SchEKS4P8r/Xpnl5KUeiw==
+  dependencies:
+    "@liskhq/lisk-cryptography" "^4.1.0"
+    "@liskhq/lisk-utils" "^0.4.0"
+    "@liskhq/lisk-validator" "^0.9.0"
+
+"@liskhq/lisk-codec@^0.4.0":
   version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-codec/-/lisk-codec-0.4.0.tgz#0b512f7bc835f921d728ead04d498b1a7a647cd1"
+  resolved "https://npm.klayr.dev/@liskhq/lisk-codec/-/lisk-codec-0.4.0.tgz#0b512f7bc835f921d728ead04d498b1a7a647cd1"
   integrity sha512-03mgvftrWK5KfjBl/VSceEBtcr2wA4NLGnuBsoxKiwL/Bolfd1f3rdXbQgUKzeY4UJEoDGHN6jRPbXLHH/yUnw==
   dependencies:
     "@liskhq/lisk-cryptography" "^4.0.0"
     "@liskhq/lisk-utils" "^0.4.0"
     "@liskhq/lisk-validator" "^0.8.0"
 
-"@liskhq/lisk-codec@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-codec/-/lisk-codec-0.3.0.tgz#bf6fd8e64f37b60766fabbdb2f130ba06f5364e8"
-  integrity sha512-E+yFbvYqKQeZ/TDvcqI57f4C6yDjXPIs1UOfEhcmb3S+QJ5KyadRB85IgPL9HJcVnB7thvPoTyIBg6pIDwCi7w==
+"@liskhq/lisk-cryptography@4.1.0", "@liskhq/lisk-cryptography@^4.0.0", "@liskhq/lisk-cryptography@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-cryptography/-/lisk-cryptography-4.1.0.tgz#8621bcb61008adb5faee4d148a91e1da068ab3cc"
+  integrity sha512-5//E14nlqyvOE21uwB8zCCYe0JmeEVCQ6gg/TjboKYEct/OX0GkK5gyb6tqJr8ApaQxRaL5WqPt2VOwxf564VA==
   dependencies:
-    "@liskhq/lisk-utils" "^0.3.0"
-    "@liskhq/lisk-validator" "^0.7.0"
-
-"@liskhq/lisk-cryptography@4.0.0", "@liskhq/lisk-cryptography@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-cryptography/-/lisk-cryptography-4.0.0.tgz#f8752053f5512a6257a6b59a9ae45567e4ff5053"
-  integrity sha512-246hoey+sKx0/2GrECXfsjTmhv5PaD0z/vYpV1zTL4qPOHaDNqbKsSLg/uAt2OfM7et1KoG76jpYzaiifqCJiw==
-  dependencies:
-    "@liskhq/lisk-passphrase" "^4.0.0"
+    "@liskhq/lisk-passphrase" "^4.1.0"
     buffer-reverse "1.0.1"
     hash-wasm "4.9.0"
     tweetnacl "1.0.3"
 
-"@liskhq/lisk-cryptography@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-cryptography/-/lisk-cryptography-3.3.0.tgz#6027ae1cea299f8e480ef5dd9c2cfb6217ff7bbf"
-  integrity sha512-nVd1dWjsL1rLNeVt1qCROpflaaZx6o93Aa+FXhnUTTyNqYrWy5OjCU9eqDYUsfqA3GnYCaIbuG9crmKWf6XHVQ==
-  dependencies:
-    buffer-reverse "1.0.1"
-    ed2curve "0.3.0"
-    tweetnacl "1.0.3"
-    varuint-bitcoin "1.1.2"
-  optionalDependencies:
-    sodium-native "3.2.1"
-
-"@liskhq/lisk-db@0.3.10", "@liskhq/lisk-db@^0.3.6":
+"@liskhq/lisk-db@0.3.10":
   version "0.3.10"
   resolved "https://registry.yarnpkg.com/@liskhq/lisk-db/-/lisk-db-0.3.10.tgz#af0a96925a3a76a6b05bef0a31dacc2b2357bfb0"
   integrity sha512-1vG6qCCbSw016peckgcl8vxwJMke0kUi9a4OCUmp+OgzcroNmc/EHR/psOVaBqW3Jrmcg7BNpY4d3vGsFy1tsg==
@@ -755,10 +841,10 @@
     socketcluster-client "14.3.1"
     socketcluster-server "14.6.0"
 
-"@liskhq/lisk-passphrase@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-passphrase/-/lisk-passphrase-4.0.0.tgz#a1c9a9481588808f8fc9487971450833d6fd1c01"
-  integrity sha512-bohEKYtKSqMHyajWqQV3fES5Ejto5gUhAem7fZkLZpgyBIKfZt2xjjdVZRINuvvUixzNBvqpqwF3LQvAJl7SSw==
+"@liskhq/lisk-passphrase@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-passphrase/-/lisk-passphrase-4.1.0.tgz#d9a72a9c9d4cdb557a25b84bffe73d579155f723"
+  integrity sha512-1VdpEp+OGiyCF0Fjtgcc+SLlHeIflzya49GzIXcXjFNf19VgkUu/eIDM8XHxSdj/5KzpL+yD07OYCh+LdoAkfA==
   dependencies:
     bip39 "3.0.3"
 
@@ -771,35 +857,18 @@
     "@liskhq/lisk-utils" "^0.4.0"
     debug "4.3.4"
 
-"@liskhq/lisk-transactions@^5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-transactions/-/lisk-transactions-5.3.0.tgz#568666f2799b55df0f62ceb0d8f8bd8e7fe9261d"
-  integrity sha512-UtsYb5H7aqW09UBGjtUGzrrgO1tnmRbgDsEGymG27XYvvCVIHZAFxZuWwilvJpR1AVkrctoUqnS2tXk6T8vjBQ==
+"@liskhq/lisk-transactions@^6.0.0", "@liskhq/lisk-transactions@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-transactions/-/lisk-transactions-6.1.0.tgz#4225151b11fb1c1c272d8d01566f3ef45470d450"
+  integrity sha512-v3DS2O7mSDHMqRRI8ilgFaizjH9zZ/PDBdiMviAzJ16ZPCqqYJ7Dwm6Blp7fAOPCgLwRJTVwLNCgeFiMYjo6Kg==
   dependencies:
-    "@liskhq/lisk-codec" "^0.3.0"
-    "@liskhq/lisk-cryptography" "^3.3.0"
-    "@liskhq/lisk-validator" "^0.7.0"
-
-"@liskhq/lisk-transactions@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-transactions/-/lisk-transactions-6.0.0.tgz#6bcd43b1cd3a7787f98fe41d1abd8ed26c180e7b"
-  integrity sha512-HnvPxtoglIR1qHohIXg7K9HCiU0naMcz2+wZUH1jwgDwugCNaypLSTNat1dI7/5MHn8MpohHun0a1tWmJZYH/A==
-  dependencies:
-    "@liskhq/lisk-codec" "^0.4.0"
-    "@liskhq/lisk-cryptography" "^4.0.0"
-    "@liskhq/lisk-validator" "^0.8.0"
-
-"@liskhq/lisk-tree@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-tree/-/lisk-tree-0.3.0.tgz#e8051d152e5a9ba0eefa3d62ce6dc2a097970f07"
-  integrity sha512-fgF3/cfnk6gxxm8XF9swrDUU7vZBRZl/W8fGH+fiCPiEvE9FswcIhWVVppYjh3MjKjW82Znyw2/IhmhuE42w7g==
-  dependencies:
-    "@liskhq/lisk-cryptography" "^3.3.0"
-    "@liskhq/lisk-utils" "^0.3.0"
+    "@liskhq/lisk-codec" "^0.5.0"
+    "@liskhq/lisk-cryptography" "^4.1.0"
+    "@liskhq/lisk-validator" "^0.9.0"
 
 "@liskhq/lisk-tree@^0.4.0":
   version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-tree/-/lisk-tree-0.4.0.tgz#c81f0681487d1267f9082ebbd41094d4fc8c6145"
+  resolved "https://npm.klayr.dev/@liskhq/lisk-tree/-/lisk-tree-0.4.0.tgz#c81f0681487d1267f9082ebbd41094d4fc8c6145"
   integrity sha512-Gl4NrFMjF5uEo1jnK5i7GLwxChXC6BoRk80lDConU2Xjrm0hBwyiriEnBxXau4NfGHHfYPUbfZxD6OEJ9Wtl/A==
   dependencies:
     "@liskhq/lisk-cryptography" "^4.0.0"
@@ -812,16 +881,21 @@
   dependencies:
     lodash.clonedeep "4.5.0"
 
-"@liskhq/lisk-utils@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-utils/-/lisk-utils-0.3.0.tgz#202fd2c1352c3c30c5f6633e86af1c3987c9a5fe"
-  integrity sha512-cch54FcrRdjVsgo57hKwkN4wzDvn86VmgQ6kVk3g5kDPHXtIQN/6+9wHKB+oTWIt2TTqOEbx+V9B7GBZ3V9MkA==
+"@liskhq/lisk-validator@0.9.0", "@liskhq/lisk-validator@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@liskhq/lisk-validator/-/lisk-validator-0.9.0.tgz#2dc6a4627accab44d4393302b527ac8d2244e94f"
+  integrity sha512-47zqZxkYDvrtweLK2zWhA6169jjKY1EKJhj3+fQ1lDnqyLjfQwHFJ0qEsY1kFWBYQWI6KRGbOJcnGLsDnGdIfg==
   dependencies:
-    lodash.clonedeep "4.5.0"
+    "@liskhq/lisk-cryptography" "^4.1.0"
+    ajv "8.1.0"
+    ajv-formats "2.1.1"
+    debug "4.3.4"
+    semver "7.5.2"
+    validator "13.7.0"
 
-"@liskhq/lisk-validator@0.8.0", "@liskhq/lisk-validator@^0.8.0":
+"@liskhq/lisk-validator@^0.8.0":
   version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-validator/-/lisk-validator-0.8.0.tgz#af62c4ef9cc71b2bd696eb70dca89ca7411c96c3"
+  resolved "https://npm.klayr.dev/@liskhq/lisk-validator/-/lisk-validator-0.8.0.tgz#af62c4ef9cc71b2bd696eb70dca89ca7411c96c3"
   integrity sha512-aChkjwuwBBzvDIQhyCRozOvQ0fTWjzAOLZJi3i53+1op6J3f6LZYG6ffA6q/x6W1/tQbApSoc2GJWrSCjmFpFw==
   dependencies:
     "@liskhq/lisk-cryptography" "^4.0.0"
@@ -829,18 +903,6 @@
     ajv-formats "2.1.1"
     debug "4.3.4"
     semver "7.5.2"
-    validator "13.7.0"
-
-"@liskhq/lisk-validator@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@liskhq/lisk-validator/-/lisk-validator-0.7.0.tgz#11f06705858be57e019c4f50a0d8e07e7e285913"
-  integrity sha512-4CAl0rix1+zG7ZWB+D8CDnxtrMAkOoUqH0dk9yfGEjv7xiKjv/hzQZ/XbJuEZPIy7DTGIXSqm3nk2Q/vepmJiw==
-  dependencies:
-    "@liskhq/lisk-cryptography" "^3.3.0"
-    ajv "8.1.0"
-    ajv-formats "2.0.2"
-    debug "4.3.4"
-    semver "7.3.5"
     validator "13.7.0"
 
 "@mapbox/node-pre-gyp@^1.0.9":
@@ -1625,13 +1687,6 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-ajv-formats@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.0.2.tgz#69875cb99d76c74be46e9c7a4444bc232354eba0"
-  integrity sha512-Brah4Uo5/U8v76c6euTwtjVFFaVishwnJrQBYpev1JRh4vjA1F4HY3UzQez41YUCszUCXKagG8v6eVRBHV1gkw==
-  dependencies:
-    ajv "^8.0.0"
-
 ajv-formats@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
@@ -1668,18 +1723,6 @@ ajv@^8.0.0, ajv@^8.0.1:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
-
-amp-message@~0.1.1:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/amp-message/-/amp-message-0.1.2.tgz#a78f1c98995087ad36192a41298e4db49e3dfc45"
-  integrity sha512-JqutcFwoU1+jhv7ArgW38bqrE+LQdcRv4NxNw0mp0JHQyB6tXesWRjtYKlDgHRY2o3JE5UTaBGUK8kSWUdxWUg==
-  dependencies:
-    amp "0.3.1"
-
-amp@0.3.1, amp@~0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/amp/-/amp-0.3.1.tgz#6adf8d58a74f361e82c1fa8d389c079e139fc47d"
-  integrity sha512-OwIuC4yZaRogHKiuU5WlMR5Xk/jAcpPtawWL05Gj8Lvm2F6mwoJt4O/bHI+DHwG79vWd+8OFYM4/BzYqyRd3qw==
 
 ansi-colors@^4.1.1:
   version "4.1.3"
@@ -2658,13 +2701,6 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
-ed2curve@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/ed2curve/-/ed2curve-0.3.0.tgz#322b575152a45305429d546b071823a93129a05d"
-  integrity sha512-8w2fmmq3hv9rCrcI7g9hms2pMunQr1JINfcjwR9tAyZqhtyaMN991lF/ZfHfr5tzZQ8c7y7aBgZbjfbd0fjFwQ==
-  dependencies:
-    tweetnacl "1.x.x"
-
 electron-to-chromium@^1.4.535:
   version "1.4.601"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.601.tgz#cac69868548aee89961ffe63ff5a7716f0685b75"
@@ -2834,10 +2870,10 @@ eslint-config-airbnb-base@14.2.1:
     object.assign "^4.1.2"
     object.entries "^1.1.2"
 
-eslint-config-lisk-base@2.0.1:
+eslint-config-klayr-base@2.0.1:
   version "2.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-lisk-base/-/eslint-config-lisk-base-2.0.1.tgz#f9886032bafd4643bc3940c129c3fcfe5d684ff1"
-  integrity sha512-A6fK9qOChiRc/7r0QyDIXCStxKQd/TmhOJlZnN/IK5viW5TAs9XBhlFcG1cXVNPYtRBhhNX2nosBTWPwjLfyiQ==
+  resolved "https://registry.yarnpkg.com/eslint-config-klayr-base/-/eslint-config-klayr-base-2.0.1.tgz#3b0697bc45ce026adb793164538da16e6ec17690"
+  integrity sha512-m+JUplgrGbp93o8QPwK2JK2qRY7FFX8XHdNxw+kRVAE4Som1qjWQaqMjLBs/8fXbPVqs0yUJOTgGnpw+mplgMA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "4.19.0"
     "@typescript-eslint/parser" "4.19.0"
@@ -4829,6 +4865,33 @@ keyv@^4.5.3:
   dependencies:
     json-buffer "3.0.1"
 
+klayr-framework@0.11.4:
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/klayr-framework/-/klayr-framework-0.11.4.tgz#49ad8b1664363b791f6e94000424d8c68ebc0b63"
+  integrity sha512-VBIJJYCKlYhCzZILy5e3JwBlAesQti9urgWelkW0F6IHvAEshFMP4HMReLy7CmcB4W2WbfvtZX5KbERWdosKvw==
+  dependencies:
+    "@chainsafe/blst" "0.2.9"
+    "@klayr/api-client" "^6.0.3"
+    "@klayr/chain" "^0.5.2"
+    "@klayr/codec" "^0.4.2"
+    "@klayr/cryptography" "^4.0.2"
+    "@klayr/p2p" "^0.9.2"
+    "@klayr/transaction-pool" "^0.7.2"
+    "@klayr/transactions" "^6.0.2"
+    "@klayr/tree" "^0.4.2"
+    "@klayr/utils" "^0.4.2"
+    "@klayr/validator" "^0.8.2"
+    "@liskhq/lisk-db" "0.3.10"
+    bunyan "1.8.15"
+    debug "4.3.4"
+    eventemitter2 "6.4.9"
+    fs-extra "11.1.0"
+    prom-client "14.2.0"
+    ps-list "7.2.0"
+    sodium-native "3.2.1"
+    ws "8.11.0"
+    zeromq "6.0.0-beta.6"
+
 kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
@@ -4878,14 +4941,14 @@ lint-staged@10.2.11:
     string-argv "0.3.1"
     stringify-object "^3.3.0"
 
-lisk-framework@0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/lisk-framework/-/lisk-framework-0.11.0.tgz#ca1ba9f781902dd5ab9442d91d74f60bd600d0c8"
-  integrity sha512-28kKCM0O04EPubXqXTf6S0FDE/sFCd1QB8LCfpj+ZeZFPO3E2rX9iCOJE7wR/IqgyrVJA0SyY8o1yAoZ52HGEA==
+lisk-framework@0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/lisk-framework/-/lisk-framework-0.11.2.tgz#109e3a8846e3c194a61c299814425ca936feb361"
+  integrity sha512-M6xPJ3Ehl7jc+vTKeXaPn+46A/CIPZtxBDbMGOTCqKhCGYYJp3tqPBJMuqzFcXOvKB03TER9cy3w/wU5vXs3NQ==
   dependencies:
     "@chainsafe/blst" "0.2.9"
-    "@liskhq/lisk-api-client" "^6.0.0"
-    "@liskhq/lisk-chain" "^0.5.0"
+    "@liskhq/lisk-api-client" "^6.0.2"
+    "@liskhq/lisk-chain" "^0.5.1"
     "@liskhq/lisk-codec" "^0.4.0"
     "@liskhq/lisk-cryptography" "^4.0.0"
     "@liskhq/lisk-db" "0.3.10"
@@ -5731,23 +5794,6 @@ please-upgrade-node@^3.2.0:
   dependencies:
     semver-compare "^1.0.0"
 
-pm2-axon-rpc@0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/pm2-axon-rpc/-/pm2-axon-rpc-0.7.1.tgz#2daec5383a63135b3f18babb70266dacdcbc429a"
-  integrity sha512-FbLvW60w+vEyvMjP/xom2UPhUN/2bVpdtLfKJeYM3gwzYhoTEEChCOICfFzxkxuoEleOlnpjie+n1nue91bDQw==
-  dependencies:
-    debug "^4.3.1"
-
-pm2-axon@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/pm2-axon/-/pm2-axon-4.0.1.tgz#a7b4bb586e9aeb35b1042b488cde15b60cabafd2"
-  integrity sha512-kES/PeSLS8orT8dR5jMlNl+Yu4Ty3nbvZRmaAtROuVm9nYYGiaoXqqKQqQYzWQzMYWUKHMQTvBlirjE5GIIxqg==
-  dependencies:
-    amp "~0.3.1"
-    amp-message "~0.1.1"
-    debug "^4.3.1"
-    escape-string-regexp "^4.0.0"
-
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -5990,11 +6036,6 @@ require-from-string@^2.0.2:
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
   integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
 
-require-from-string@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
-  integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
-
 require-main-filename@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-2.0.0.tgz#d0b329ecc7cc0f61649f62215be69af54aa8989b"
@@ -6107,7 +6148,7 @@ safe-array-concat@^1.0.1:
     has-symbols "^1.0.3"
     isarray "^2.0.5"
 
-safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@^5.2.0, safe-buffer@~5.2.0:
+safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.2, safe-buffer@^5.2.0, safe-buffer@~5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
@@ -6194,13 +6235,6 @@ semver-regex@^3.1.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.2.tgz#48d55db737c3287cd4835e17fa13feace1c41ef8"
   integrity sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==
-
-semver@7.3.5:
-  version "7.3.5"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"
-  integrity sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==
-  dependencies:
-    lru-cache "^6.0.0"
 
 semver@7.5.2:
   version "7.5.2"
@@ -6381,14 +6415,6 @@ socks@^2.6.2:
   dependencies:
     ip "^2.0.0"
     smart-buffer "^4.2.0"
-
-sodium-native@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/sodium-native/-/sodium-native-3.2.1.tgz#91cd6a175d4b58b038eeccc7078ebc33202328be"
-  integrity sha512-EgDZ/Z7PxL2kCasKk7wnRkV8W9kvwuIlHuHXAxkQm3FF0MgVsjyLBXGjSRGhjE6u7rhSpk3KaMfFM23bfMysIQ==
-  dependencies:
-    ini "^1.3.5"
-    node-gyp-build "^4.2.0"
 
 sodium-native@3.2.1:
   version "3.2.1"
@@ -6881,7 +6907,7 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-tweetnacl@1.0.3, tweetnacl@1.x.x, tweetnacl@^1.0.0:
+tweetnacl@1.0.3, tweetnacl@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-1.0.3.tgz#ac0af71680458d8a6378d0d0d050ab1407d35596"
   integrity sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==
@@ -7072,18 +7098,6 @@ validator@13.7.0:
   version "13.7.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.7.0.tgz#4f9658ba13ba8f3d82ee881d3516489ea85c0857"
   integrity sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==
-
-validator@13.7.0:
-  version "13.7.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-13.7.0.tgz#4f9658ba13ba8f3d82ee881d3516489ea85c0857"
-  integrity sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==
-
-varuint-bitcoin@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/varuint-bitcoin/-/varuint-bitcoin-1.1.2.tgz#e76c138249d06138b480d4c5b40ef53693e24e92"
-  integrity sha512-4EVb+w4rx+YfVM32HQX42AbbT7/1f5zwAYhIujKXKk8NQK+JfRVl3pqT3hjNn/L+RstigmGGKVwHA/P0wgITZw==
-  dependencies:
-    safe-buffer "^5.1.1"
 
 w3c-hr-time@^1.0.2:
   version "1.0.2"
@@ -7287,20 +7301,10 @@ ws@7.1.0:
   dependencies:
     async-limiter "^1.0.0"
 
-ws@7.5.7:
-  version "7.5.7"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.7.tgz#9e0ac77ee50af70d58326ecff7e85eb3fa375e67"
-  integrity sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==
-
 ws@8.11.0:
   version "8.11.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.11.0.tgz#6a0d36b8edfd9f96d8b25683db2f8d7de6e8e143"
   integrity sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==
-
-ws@7.5.7:
-  version "7.5.7"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.7.tgz#9e0ac77ee50af70d58326ecff7e85eb3fa375e67"
-  integrity sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==
 
 ws@^7.4.6:
   version "7.5.9"

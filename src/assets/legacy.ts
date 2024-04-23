@@ -1,4 +1,5 @@
 /*
+ * Copyright © 2024 Klayr Holding
  * Copyright © 2022 Lisk Foundation
  *
  * See the LICENSE file at the top-level directory of this distribution
@@ -11,40 +12,38 @@
  *
  * Removal or modification of this copyright notice is prohibited.
  */
-import { codec } from '@liskhq/lisk-codec';
+import { StateDB } from '@liskhq/lisk-db';
+import { DB_PREFIX_LEGACY_STORE, MODULE_NAME_LEGACY } from '../constants';
+import { genesisLegacyStoreSchema, legacyAccountStoreSchema } from '../schemas';
+import { GenesisAssetEntry, LegacyStoreEntry, LegacyStoreEntryBuffer } from '../types';
+import { getStateStore } from '../utils/store';
 
-import { MODULE_NAME_LEGACY } from '../constants';
-import { genesisLegacyStoreSchema, unregisteredAddressesSchema } from '../schemas';
-import {
-	UnregisteredAddresses,
-	GenesisAssetEntry,
-	LegacyStoreEntry,
-	LegacyStoreEntryBuffer,
-	Account,
-} from '../types';
+export type LegacyDBAccount = {
+	key: Buffer;
+	value: {
+		address: Buffer;
+		balance: string;
+	};
+};
 
-const AMOUNT_ZERO = BigInt('0');
-let legacyReserveAmount: bigint = AMOUNT_ZERO;
+export const getLegacyAccounts = async (db: StateDB): Promise<LegacyDBAccount[]> => {
+	const legacyStateStore = getStateStore(db, DB_PREFIX_LEGACY_STORE);
+	return legacyStateStore.iterateWithSchema(
+		{
+			gte: Buffer.alloc(8, 0),
+			lte: Buffer.alloc(8, 255),
+		},
+		legacyAccountStoreSchema,
+	);
+};
 
 export const getLegacyModuleEntry = async (
-	encodedUnregisteredAddresses: Buffer,
-	legacyReserveAccount: Account | undefined,
+	legacyAddresses: LegacyDBAccount[],
 ): Promise<GenesisAssetEntry> => {
-	legacyReserveAmount = legacyReserveAccount ? legacyReserveAccount.token.balance : AMOUNT_ZERO;
-
-	const { unregisteredAddresses } = await codec.decode<UnregisteredAddresses>(
-		unregisteredAddressesSchema,
-		encodedUnregisteredAddresses,
-	);
-
-	const legacyAccounts: LegacyStoreEntryBuffer[] = unregisteredAddresses.map(account => {
-		legacyReserveAmount += BigInt(account.balance);
-
-		return {
-			address: account.address,
-			balance: String(account.balance),
-		};
-	});
+	const legacyAccounts: LegacyStoreEntryBuffer[] = legacyAddresses.map(account => ({
+		address: account.key,
+		balance: String(account.value.balance),
+	}));
 
 	const sortedLegacyAccounts: LegacyStoreEntry[] = legacyAccounts
 		.sort((a, b) => a.address.compare(b.address))
@@ -59,5 +58,3 @@ export const getLegacyModuleEntry = async (
 		schema: genesisLegacyStoreSchema,
 	};
 };
-
-export const getLegacyReserveAmount = () => legacyReserveAmount;

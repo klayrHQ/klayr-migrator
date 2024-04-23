@@ -15,29 +15,34 @@ import cli from 'cli-ux';
 import { getAPIClient } from '../client';
 import { NETWORK_CONSTANT } from '../constants';
 
-let tokenIDLsk: string;
+let tokenIDKly: string;
 let prevSnapshotBlockHeight: number;
+let additionalAccounts: { address: Buffer; balance: bigint }[];
 
 interface ObserveParams {
 	readonly label: string;
 	readonly height: number;
-	readonly liskCoreV3DataPath: string;
+	readonly liskCoreV4DataPath: string;
 	readonly delay: number;
 	readonly isFinal: boolean;
 }
 
-export const getTokenIDLsk = (): string => tokenIDLsk;
+export const getTokenIDKly = () => tokenIDKly;
 
-export const setTokenIDLskByNetID = async (networkIdentifier: string): Promise<void> => {
-	tokenIDLsk = NETWORK_CONSTANT[networkIdentifier].tokenID as string;
+export const getAdditionalAccounts = () => additionalAccounts ?? [];
+
+export const setTokenIDKlyByNetID = (chainID: string) => {
+	tokenIDKly = NETWORK_CONSTANT[chainID].tokenID;
 };
 
-export const getPrevSnapshotBlockHeight = (): number => prevSnapshotBlockHeight;
+export const setAdditionalAccountsByChainID = (chainID: string) => {
+	additionalAccounts = NETWORK_CONSTANT[chainID].additionalAccounts;
+};
 
-export const setPrevSnapshotBlockHeightByNetID = async (
-	networkIdentifier: string,
-): Promise<void> => {
-	prevSnapshotBlockHeight = NETWORK_CONSTANT[networkIdentifier].prevSnapshotBlockHeight as number;
+export const getPrevSnapshotBlockHeight = () => prevSnapshotBlockHeight;
+
+export const setPrevSnapshotBlockHeightByNetID = (chainID: string) => {
+	prevSnapshotBlockHeight = NETWORK_CONSTANT[chainID].prevSnapshotBlockHeight;
 };
 
 export const getNodeInfo = async (
@@ -90,8 +95,8 @@ const getRemainingTime = (currentHeight: number, observedHeight: number): string
 export const observeChainHeight = async (options: ObserveParams): Promise<number> => {
 	const observedHeight = options.height;
 	const startHeight = options.isFinal
-		? (await getNodeInfo(options.liskCoreV3DataPath)).finalizedHeight
-		: (await getNodeInfo(options.liskCoreV3DataPath)).height;
+		? (await getNodeInfo(options.liskCoreV4DataPath)).finalizedHeight
+		: (await getNodeInfo(options.liskCoreV4DataPath)).height;
 
 	if (startHeight >= observedHeight) {
 		return startHeight;
@@ -120,8 +125,8 @@ export const observeChainHeight = async (options: ObserveParams): Promise<number
 			let height!: number;
 			try {
 				height = options.isFinal
-					? (await getNodeInfo(options.liskCoreV3DataPath)).finalizedHeight
-					: (await getNodeInfo(options.liskCoreV3DataPath)).height;
+					? (await getNodeInfo(options.liskCoreV4DataPath)).finalizedHeight
+					: (await getNodeInfo(options.liskCoreV4DataPath)).height;
 			} catch (error) {
 				return reject(error);
 			}

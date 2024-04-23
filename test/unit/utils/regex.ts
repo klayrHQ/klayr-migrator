@@ -11,4 +11,4 @@
  *
  * Removal or modification of this copyright notice is prohibited.
  */
-export const ADDRESS_LISK32 = /^lsk[a-hjkm-z2-9]{38}$/;
+export const ADDRESS_KLAYR32 = /^kly[a-hjkm-z2-9]{38}$/;
